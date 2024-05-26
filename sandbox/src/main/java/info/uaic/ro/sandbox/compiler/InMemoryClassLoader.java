@@ -20,7 +20,7 @@ public class InMemoryClassLoader extends ClassLoader {
             byte[] bytes = compiledClasses.get(name).getBytes();
             return defineClass(name, bytes, 0, bytes.length);
         } else {
-            throw new ClassNotFoundException();
+            return super.findClass(name);
         }
     }
 }

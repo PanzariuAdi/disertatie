@@ -4,9 +4,7 @@ import org.graph4j.Edge;
 import org.graph4j.Graph;
 import org.graph4j.GraphBuilder;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,8 @@ public class GraphUtils {
         List<Edge<String>> edges = new ArrayList<>();
         int maxVertex = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try (InputStream inputStream = GraphUtils.class.getResourceAsStream(path)) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] splitLine = line.split(" ");

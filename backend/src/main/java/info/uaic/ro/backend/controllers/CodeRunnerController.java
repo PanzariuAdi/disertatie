@@ -1,23 +1,21 @@
 package info.uaic.ro.backend.controllers;
 
-import info.uaic.ro.backend.services.CodeRunnerService;
+import info.uaic.ro.backend.models.dto.Statistics;
+import info.uaic.ro.backend.services.ComparisonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/code")
 @RequiredArgsConstructor
 public class CodeRunnerController {
 
-    private final CodeRunnerService codeRunnerService;
+    private final ComparisonService comparisonService;
 
     @PostMapping("/run")
-    public ResponseEntity<String> runCode(@RequestBody String code) {
-        codeRunnerService.runCode(code);
-        return ResponseEntity.ok("OKAY");
+    public ResponseEntity<Statistics> runCode(@RequestBody String code, @RequestParam String algorithmType, @RequestParam boolean isRun) {
+        return ResponseEntity.ok(comparisonService.getStatistics(code, algorithmType, isRun));
     }
 }

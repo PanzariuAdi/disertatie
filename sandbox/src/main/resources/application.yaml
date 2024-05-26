@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: sandbox
+
+server:
+  port: 8181

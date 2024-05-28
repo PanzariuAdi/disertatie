@@ -18,13 +18,11 @@ public class AlgorithmTypeController {
 
     private final AlgorithmTypeRepository algorithmTypeRepository;
 
-    @Cacheable
     @GetMapping("/all")
     public ResponseEntity<List<AlgorithmType>> findAll() {
         return ResponseEntity.ok(algorithmTypeRepository.findAll());
     }
 
-    @Cacheable
     @GetMapping("/all/{algorithmType}")
     public ResponseEntity<AlgorithmType> findByName(@PathVariable String algorithmType) {
         Optional<AlgorithmType> optional = algorithmTypeRepository.findByName(algorithmType);

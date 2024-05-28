@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface TestCasesRepository extends JpaRepository<TestCase, Long> {
 
-    List<TestCase> findAllByAlgorithmType(AlgorithmType algorithmType);
+    List<TestCase> findAllByAlgorithmTypeAndIsRun(AlgorithmType algorithmType, boolean isRun);
 
 }

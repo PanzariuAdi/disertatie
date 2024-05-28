@@ -1,39 +1,42 @@
 package info.uaic.ro.sandbox.repositories;
 
 import info.uaic.ro.sandbox.models.TestInput;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import info.uaic.ro.sandbox.utils.GraphUtils;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.*;
 
-@Repository
-public interface GraphRepository extends JpaRepository<TestInput, String> {
+@Component
+public class GraphRepository {
 
-    List<TestInput> findAllByAlgorithmType(String algorithmType);
-    List<TestInput> findAllByAlgorithmTypeAndIsRun(String algorithmType, boolean isRun);
+    private static final List<String> datasets = List.of("0", "107", "348", "414", "686", "698", "1684", "1912", "3437", "3980");
+    private static final Map<String, List<TestInput>> runTestCases = new HashMap<>();
+    private static final Map<String, List<TestInput>> submitTestCases = new HashMap<>();
+    private static final String FACEBOOK_EGO_PATH = "/datasets/ego/facebook/";
+    private static final String EDGES_EXTENSION = ".edges";
 
-//    private static final String FACEBOOK_EGO_PATH = "/datasets/ego/facebook/";
-//    private static final String EDGES_EXTENSION = ".edges";
-//    private static final List<String> datasets = List.of("0", "107", "348", "414", "686", "698", "1684", "1912", "3437", "3980");
-//
-//    // load the graph in batches, maybe use an index or something
-//    public List<TestInput> getAllFacebookTestInputs(boolean isRun) {
-//        List<TestInput> graphs = new ArrayList<>();
-//        datasets.forEach(dataset -> {
-//            graphs.add(
-//                    TestInput.builder()
-//                            .id(dataset)
-//                            .graph(GraphUtils.createGraphFromPath(FACEBOOK_EGO_PATH + dataset + EDGES_EXTENSION))
-//                            .build()
-//            );
-//        });
-//        return graphs;
-//    }
-//
-//    public TestInput getFacebookTestInput(String id) {
-//        return TestInput.builder()
-//                .id(id)
-//                .graph(GraphUtils.createGraphFromPath(FACEBOOK_EGO_PATH + id + EDGES_EXTENSION))
-//                .build();
-//    }
+    static {
+        List<TestInput> facebookInputs = new ArrayList<>();
+        datasets.forEach(dataset -> facebookInputs.add(getFacebookTestInput(dataset)));
+
+        submitTestCases.put("centrality", facebookInputs);
+        runTestCases.put("centrality", Collections.singletonList(getFacebookTestInput("69")));
+
+        submitTestCases.put("map", facebookInputs);
+        runTestCases.put("map", Collections.singletonList(getFacebookTestInput("69")));
+    }
+
+    // load the graph in batches, maybe use an index or something
+    public List<TestInput> getAllTestInputsAfter(String algorithmType, boolean isRun) {
+        List<TestInput> list = isRun ? runTestCases.get(algorithmType) : submitTestCases.get(algorithmType);
+
+        return list == null ? new ArrayList<>() : list;
+    }
+
+    private static TestInput getFacebookTestInput(String id) {
+        return TestInput.builder()
+                .id(id)
+                .graph(GraphUtils.createGraphFromPath(FACEBOOK_EGO_PATH + id + EDGES_EXTENSION))
+                .build();
+    }
 }

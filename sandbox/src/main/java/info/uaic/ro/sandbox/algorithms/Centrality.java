@@ -1,15 +1,66 @@
 package info.uaic.ro.sandbox.algorithms;
 
 import org.graph4j.Graph;
-import org.springframework.stereotype.Component;
+import org.graph4j.GraphBuilder;
 
 import java.util.*;
 
-@Component
 public class Centrality {
 
-    public Map<Integer, Double> calculateBetweennessCentrality(Graph<?, ?> graph) {
+    public static void main(String[] args) {
+        Graph<?, ?> graph = GraphBuilder
+                .numVertices(6)
+                .addEdge(0, 1)
+                .addEdge(0, 2)
+                .addEdge(1, 3)
+                .addEdge(2, 3)
+                .addEdge(3, 4)
+                .addEdge(4, 5)
+                .buildGraph();
 
+        double alpha = 0.1;
+        double beta = 1.0;
+        int maxIterations = 1000;
+        double tol = 1e-6;
+
+        double[] centrality = katzCentrality(graph, alpha, beta, maxIterations, tol);
+
+        for (int i = 0; i < centrality.length; i++) {
+            System.out.println("Katz Centrality of node " + i + ": " + centrality[i]);
+        }
+    }
+
+    public static double[] katzCentrality(Graph<?, ?> graph, double alpha, double beta, int maxIterations, double tol) {
+        int n = graph.numVertices();
+        double[] centrality = new double[n];
+        int[][] adjMatrix = graph.adjacencyMatrix();
+        Arrays.fill(centrality, beta);
+
+        double[] prevCentrality = new double[n];
+
+        for (int iter = 0; iter < maxIterations; iter++) {
+            System.arraycopy(centrality, 0, prevCentrality, 0, n);
+
+            for (int i = 0; i < n; i++) {
+                centrality[i] = beta;
+                for (int j = 0; j < n; j++) {
+                    centrality[i] += alpha * adjMatrix[i][j] * prevCentrality[j];
+                }
+            }
+
+            double delta = 0.0;
+            for (int i = 0; i < n; i++) {
+                delta += Math.abs(centrality[i] - prevCentrality[i]);
+            }
+            if (delta < tol) {
+                break;
+            }
+        }
+
+        return centrality;
+    }
+
+    public Map<Integer, Double> calculateBetweennessCentrality(Graph<?, ?> graph) {
         Map<Integer, Double> Cb = new HashMap<>();
 
         for (int vertex : graph.vertices()) {

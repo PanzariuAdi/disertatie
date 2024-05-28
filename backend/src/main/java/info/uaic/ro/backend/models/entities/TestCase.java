@@ -20,5 +20,6 @@ public abstract class TestCase {
     private int caseNumber;
     private int duration;
     private int memory;
+    private boolean isRun;
 
 }

@@ -1,6 +1,5 @@
 package info.uaic.ro.backend.services;
 
-import info.uaic.ro.backend.aop.LogFunctionCall;
 import info.uaic.ro.backend.clients.SandboxClient;
 import info.uaic.ro.backend.models.dto.CaseResult;
 import info.uaic.ro.backend.models.dto.SandboxCaseResult;
@@ -24,8 +23,8 @@ public class ComparisonService {
     private final TestCaseService testCaseService;
 
     public Statistics getStatistics(String code, String algorithmType, boolean isRun) {
-        SandboxResult<?> result = sandboxClient.getResultFor(code, algorithmType);
-        List<TestCase> expected = testCaseService.findAllByAlgorithmType(algorithmType);
+        SandboxResult<?> result = sandboxClient.getResultFor(code, algorithmType, isRun);
+        List<TestCase> expected = testCaseService.findAllBy(algorithmType, isRun);
 
         return combineResults(result, expected);
     }

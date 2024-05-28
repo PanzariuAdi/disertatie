@@ -4,6 +4,6 @@ import info.uaic.ro.backend.models.dto.SandboxResult;
 
 public interface SandboxClient {
 
-    SandboxResult<?> getResultFor(String code, String algorithmType);
+    SandboxResult<?> getResultFor(String code, String algorithmType, boolean isRun);
 
 }

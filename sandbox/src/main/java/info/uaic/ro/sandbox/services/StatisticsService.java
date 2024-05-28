@@ -13,21 +13,20 @@ public class StatisticsService {
 
     private final RunnerService runnerService;
     private final GraphRepository graphRepository;
-    private final List<String> testInputs = List.of("0", "107", "348", "414", "686", "698", "1684", "1912", "3437", "3980");
 
     public StatisticsService(RunnerService runnerService, GraphRepository graphRepository) {
         this.runnerService = runnerService;
         this.graphRepository = graphRepository;
     }
 
-    public Statistics createStatistics(String algorithm) {
+    public Statistics createStatistics(String algorithm, String algorithmType, boolean isRun) {
         Statistics statistics = new Statistics();
 
-        testInputs.forEach(ts -> {
-            TestInput testInput = graphRepository.getFacebookTestInput(ts);
+        List<TestInput> inputs = graphRepository.getAllTestInputsAfter(algorithmType, isRun);
 
+        inputs.forEach(input -> {
             long start = System.currentTimeMillis();
-            Object result = runnerService.runCode(algorithm, testInput.getGraph());
+            Object result = runnerService.runCode(algorithm, input.getGraph());
             long duration = System.currentTimeMillis() - start;
             createAndAddResultToStatistics(statistics, result, duration);
         });

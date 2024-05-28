@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class SandboxClientImpl implements SandboxClient {
 
     private static final String ALGORITHM_TYPE_PARAM = "algorithmType";
+    private static final String IS_RUN_PARAM = "isRun";
     private static final String EXECUTE_ENDPOINT = "/execute";
     private final RestTemplate restTemplate;
 
@@ -24,7 +25,7 @@ public class SandboxClientImpl implements SandboxClient {
     }
 
     @Override
-    public SandboxResult<?> getResultFor(String code, String algorithmType) {
+    public SandboxResult<?> getResultFor(String code, String algorithmType, boolean isRun) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.TEXT_PLAIN);
 
@@ -32,6 +33,7 @@ public class SandboxClientImpl implements SandboxClient {
 
         String url = UriComponentsBuilder.fromHttpUrl(sandboxUrl + EXECUTE_ENDPOINT)
                 .queryParam(ALGORITHM_TYPE_PARAM, algorithmType)
+                .queryParam(IS_RUN_PARAM, isRun)
                 .toUriString();
 
         return restTemplate.postForObject(url, requestEntity, SandboxResult.class);

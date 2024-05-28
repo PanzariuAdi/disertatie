@@ -18,18 +18,14 @@ public class TestCaseService {
     private final TestCasesRepository testCasesRepository;
     private final AlgorithmTypeRepository algorithmTypeRepository;
 
-    public List<TestCase> findAll() {
-        return testCasesRepository.findAll();
-    }
-
-    public List<TestCase> findAllByAlgorithmType(String algorithmType) {
+    public List<TestCase> findAllBy(String algorithmType, boolean isRun) {
         Optional<AlgorithmType> optional = algorithmTypeRepository.findByName(algorithmType);
 
         if (optional.isEmpty()) {
             return new ArrayList<>();
         }
 
-        return testCasesRepository.findAllByAlgorithmType(optional.get());
+        return testCasesRepository.findAllByAlgorithmTypeAndIsRun(optional.get(), isRun);
     }
 
 }

@@ -1,13 +1,9 @@
 package info.uaic.ro.backend.services.handlers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import info.uaic.ro.backend.aop.LogFunctionCall;
 import info.uaic.ro.backend.models.dto.CaseResult;
 import info.uaic.ro.backend.models.dto.SandboxCaseResult;
 import info.uaic.ro.backend.models.entities.BetwennesCentralityTestCase;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +15,6 @@ import java.util.Map;
 public class BetweennessCentralityTestCaseHandler implements TestCaseHandler<BetwennesCentralityTestCase> {
 
     @Override
-    @LogFunctionCall
     @SuppressWarnings("unchecked")
     public CaseResult<Map<Integer, Double>> createCaseResult(BetwennesCentralityTestCase testCase, SandboxCaseResult<?> sandboxCaseResult) {
         CaseResult<Map<Integer, Double>> caseResult = new CaseResult<>();
@@ -29,7 +24,7 @@ public class BetweennessCentralityTestCaseHandler implements TestCaseHandler<Bet
             throw new RuntimeException(e);
         }
         caseResult.setActual(getActual(sandboxCaseResult));
-        caseResult.setCaseNumber(sandboxCaseResult.getCaseNumber());
+        caseResult.setCaseNumber(testCase.getCaseNumber());
         caseResult.setMemory(sandboxCaseResult.getMemory());
         caseResult.setDuration(sandboxCaseResult.getDuration());
         caseResult.setExpectedMemory(testCase.getMemory());

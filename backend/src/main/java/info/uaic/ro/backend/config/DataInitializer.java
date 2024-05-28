@@ -45,6 +45,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs0 = new BetwennesCentralityTestCase();
         bcTs0.setAlgorithmType(bc);
+        bcTs0.setRun(false);
         bcTs0.setCaseNumber(0);
         bcTs0.setExpected(map);
         bcTs0.setDuration(10);
@@ -54,6 +55,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs1 = new BetwennesCentralityTestCase();
         bcTs1.setAlgorithmType(bc);
+        bcTs1.setRun(false);
         bcTs1.setCaseNumber(1);
         bcTs1.setExpected(map);
         bcTs1.setDuration(10);
@@ -63,6 +65,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs2 = new BetwennesCentralityTestCase();
         bcTs2.setAlgorithmType(bc);
+        bcTs2.setRun(false);
         bcTs2.setCaseNumber(2);
         bcTs2.setExpected(map);
         bcTs2.setDuration(10);
@@ -72,6 +75,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs3 = new BetwennesCentralityTestCase();
         bcTs3.setAlgorithmType(bc);
+        bcTs3.setRun(false);
         bcTs3.setCaseNumber(3);
         bcTs3.setExpected(map);
         bcTs3.setDuration(10);
@@ -81,6 +85,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs4 = new BetwennesCentralityTestCase();
         bcTs4.setAlgorithmType(bc);
+        bcTs4.setRun(false);
         bcTs4.setCaseNumber(4);
         bcTs4.setExpected(map);
         bcTs4.setDuration(10);
@@ -90,6 +95,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs5 = new BetwennesCentralityTestCase();
         bcTs5.setAlgorithmType(bc);
+        bcTs5.setRun(false);
         bcTs5.setCaseNumber(5);
         bcTs5.setExpected(map);
         bcTs5.setDuration(10);
@@ -99,6 +105,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs6 = new BetwennesCentralityTestCase();
         bcTs6.setAlgorithmType(bc);
+        bcTs6.setRun(false);
         bcTs6.setCaseNumber(6);
         bcTs6.setExpected(map);
         bcTs6.setDuration(10);
@@ -108,6 +115,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs7 = new BetwennesCentralityTestCase();
         bcTs7.setAlgorithmType(bc);
+        bcTs7.setRun(false);
         bcTs7.setCaseNumber(7);
         bcTs7.setExpected(map);
         bcTs7.setDuration(10);
@@ -117,6 +125,7 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs8 = new BetwennesCentralityTestCase();
         bcTs8.setAlgorithmType(bc);
+        bcTs8.setRun(false);
         bcTs8.setCaseNumber(8);
         bcTs8.setExpected(map);
         bcTs8.setDuration(10);
@@ -126,11 +135,21 @@ public class DataInitializer {
         // CASE 0
         BetwennesCentralityTestCase bcTs9 = new BetwennesCentralityTestCase();
         bcTs9.setAlgorithmType(bc);
+        bcTs9.setRun(false);
         bcTs9.setCaseNumber(9);
         bcTs9.setExpected(map);
         bcTs9.setDuration(10);
         bcTs9.setMemory(10);
         testCasesRepository.save(bcTs9);
+
+        BetwennesCentralityTestCase bcTs10 = new BetwennesCentralityTestCase();
+        bcTs10.setAlgorithmType(bc);
+        bcTs10.setRun(true);
+        bcTs10.setCaseNumber(10);
+        bcTs10.setExpected(map);
+        bcTs10.setDuration(10);
+        bcTs10.setMemory(10);
+        testCasesRepository.save(bcTs10);
 
         // ANOTHER TYPE
         List<Integer> list = new ArrayList<>();

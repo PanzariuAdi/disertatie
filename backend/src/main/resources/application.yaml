@@ -11,12 +11,16 @@ spring:
     password:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
   h2:
     console:
       enabled: true
       path: /h2-console
+  sql:
+    init:
+      mode: always
 
 sandbox-host: localhost
 sandbox-port: 8181

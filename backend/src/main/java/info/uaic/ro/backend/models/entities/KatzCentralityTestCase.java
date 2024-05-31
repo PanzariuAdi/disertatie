@@ -7,30 +7,27 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
-@DiscriminatorValue("ANOTHER")
-public class AnotherTestCase extends TestCase {
+@DiscriminatorValue("KATZ_CENTRALITY")
+public class KatzCentralityTestCase extends TestCase {
 
     @Lob
     private String expected;
 
-    public AnotherTestCase() {
-    }
-
-    public void setExpected(List<Integer> expected) throws JsonProcessingException {
+    public void setExpected(Map<Integer, Double> expected) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         this.expected = objectMapper.writeValueAsString(expected);
     }
 
-    public List<Integer> getExpected() throws JsonProcessingException {
+    public Map<Integer, Double> getExpected() throws JsonProcessingException {
         if (this.expected == null || this.expected.isEmpty()) {
-            return new ArrayList<>();
+            return new HashMap<>();
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(this.expected, new TypeReference<>() {});
+        return objectMapper.readValue(this.expected, new TypeReference<HashMap<Integer, Double>>() {});
     }
 }

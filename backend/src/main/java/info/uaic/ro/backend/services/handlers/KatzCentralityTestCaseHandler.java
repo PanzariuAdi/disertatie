@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import info.uaic.ro.backend.models.dto.CaseResult;
 import info.uaic.ro.backend.models.dto.SandboxCaseResult;
 import info.uaic.ro.backend.models.entities.BetwennesCentralityTestCase;
+import info.uaic.ro.backend.models.entities.KatzCentralityTestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,25 +13,23 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class BetweennessCentralityTestCaseHandler implements TestCaseHandler<BetwennesCentralityTestCase> {
+public class KatzCentralityTestCaseHandler implements TestCaseHandler<KatzCentralityTestCase> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public CaseResult<Map<Integer, Double>> createCaseResult(BetwennesCentralityTestCase testCase, SandboxCaseResult<?> sandboxCaseResult) {
+    public CaseResult<Map<Integer, Double>> createCaseResult(KatzCentralityTestCase testCase, SandboxCaseResult<?> sandboxCaseResult) {
         CaseResult<Map<Integer, Double>> caseResult = new CaseResult<>();
         try {
             caseResult.setExpected(testCase.getExpected());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
         caseResult.setActual(getActual(sandboxCaseResult));
         caseResult.setCaseNumber(testCase.getCaseNumber());
         caseResult.setMemory(sandboxCaseResult.getMemory());
         caseResult.setDuration(sandboxCaseResult.getDuration());
         caseResult.setExpectedMemory(testCase.getMemory());
         caseResult.setExpectedDuration(testCase.getDuration());
-
         try {
             caseResult.setCorrect(testCase.getExpected().equals(caseResult.getActual()));
         } catch (JsonProcessingException e) {

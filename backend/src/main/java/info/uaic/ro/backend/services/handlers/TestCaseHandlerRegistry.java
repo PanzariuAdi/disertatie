@@ -1,6 +1,7 @@
 package info.uaic.ro.backend.services.handlers;
 
 import info.uaic.ro.backend.models.entities.BetwennesCentralityTestCase;
+import info.uaic.ro.backend.models.entities.KatzCentralityTestCase;
 import info.uaic.ro.backend.models.entities.TestCase;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ public class TestCaseHandlerRegistry {
 
     static {
         handlers.put(BetwennesCentralityTestCase.class, new BetweennessCentralityTestCaseHandler());
+        handlers.put(KatzCentralityTestCase.class, new KatzCentralityTestCaseHandler());
     }
 
     @SuppressWarnings("unchecked")

@@ -11,7 +11,8 @@ import info.uaic.ro.backend.services.handlers.TestCaseHandlerRegistry;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,46 +24,37 @@ public class ComparisonService {
     private final TestCaseService testCaseService;
 
     public Statistics getStatistics(String code, String algorithmType, boolean isRun) {
-        SandboxResult<?> result = sandboxClient.getResultFor(code, algorithmType, isRun);
-        List<TestCase> expected = testCaseService.findAllBy(algorithmType, isRun);
+        SandboxResult<?> sandboxResult = sandboxClient.getResultFor(code, algorithmType, isRun);
+        List<TestCase> expectedValues = testCaseService.findAllBy(algorithmType, isRun);
 
-        return combineResults(result, expected);
+        List<CaseResult<?>> caseResultList = generateCaseResults(sandboxResult, expectedValues);
+        return buildStatistics(caseResultList);
     }
 
-    private Statistics combineResults(SandboxResult<?> sandboxResult, List<TestCase> expected) {
-        List<SandboxCaseResult<?>> sortedResults = sandboxResult.getResults().stream()
-                .sorted(Comparator.comparingInt(SandboxCaseResult::getCaseNumber))
+    private List<CaseResult<?>> generateCaseResults(SandboxResult<?> sandboxResult, List<TestCase> expected) {
+        return IntStream.range(0, Math.min(sandboxResult.getResults().size(), expected.size()))
+                .mapToObj(i -> createCaseResult(sandboxResult, expected, i))
                 .collect(Collectors.toList());
+    }
 
-        List<TestCase> sortedExpected = expected.stream()
-                .sorted(Comparator.comparingInt(TestCase::getCaseNumber))
-                .collect(Collectors.toList());
+    private CaseResult<?> createCaseResult(SandboxResult<?> sandboxResult, List<TestCase> expected, int index) {
+        TestCase testCase = expected.get(index);
+        SandboxCaseResult<?> sandboxCaseResult = sandboxResult.getResults().get(index);
+        return getHandler(testCase)
+                .map(handler -> handler.createCaseResult(testCase, sandboxCaseResult))
+                .orElseThrow(() -> new IllegalArgumentException("No handler registered for " + testCase.getClass()));
+    }
 
-        if (sortedResults.size() != sortedExpected.size()) {
-            throw new IllegalArgumentException("Test cases sizes do not match!");
-        }
+    @SuppressWarnings("unchecked")
+    private Optional<TestCaseHandler<TestCase>> getHandler(TestCase testCase) {
+        return Optional.ofNullable((TestCaseHandler<TestCase>) TestCaseHandlerRegistry.getHandler(testCase.getClass()));
+    }
 
-        List<CaseResult<?>> caseResultList = IntStream.range(0, sortedExpected.size())
-                .mapToObj(i -> getCaseResult(sandboxResult, sortedExpected, i))
-                .collect(Collectors.toList());
-
+    private Statistics buildStatistics(List<CaseResult<?>> caseResultList) {
         return Statistics.builder()
                 .totalCases(caseResultList.size())
                 .caseResultList(caseResultList)
                 .build();
-    }
-
-    private CaseResult<?> getCaseResult(SandboxResult<?> sandboxResult, List<TestCase> expected, int i) {
-        TestCase testCase = expected.get(i);
-        SandboxCaseResult<?> sandboxCaseResult = sandboxResult.getResults().get(i);
-
-        TestCaseHandler<TestCase> handler = (TestCaseHandler<TestCase>) TestCaseHandlerRegistry.getHandler(testCase.getClass());
-
-        if (handler == null) {
-            throw new IllegalArgumentException("No handler registered for " + testCase.getClass());
-        }
-
-        return handler.createCaseResult(testCase, sandboxCaseResult);
     }
 
 }

@@ -1,63 +1,49 @@
 package info.uaic.ro.sandbox.algorithms;
 
 import org.graph4j.Graph;
-import org.graph4j.GraphBuilder;
 
 import java.util.*;
 
 public class Centrality {
 
-    public static void main(String[] args) {
-        Graph<?, ?> graph = GraphBuilder
-                .numVertices(6)
-                .addEdge(0, 1)
-                .addEdge(0, 2)
-                .addEdge(1, 3)
-                .addEdge(2, 3)
-                .addEdge(3, 4)
-                .addEdge(4, 5)
-                .buildGraph();
+    private static final int MAX_ITERATIONS_DEFAULT = 100;
+    private static final double TOLERANCE_DEFAULT = 0.001;
+    private static final double DAMPING_FACTOR_DEFAULT = 0.01d;
 
-        double alpha = 0.1;
-        double beta = 1.0;
-        int maxIterations = 1000;
-        double tol = 1e-6;
+    public Map<Integer, Double> calculateKatzCentrality(Graph<?, ?> graph) {
+        Map<Integer, Double> katz = new HashMap<>();
+        Map<Integer, Double> nextKatz = new HashMap<>();
+        double tolerance = TOLERANCE_DEFAULT;
+        int maxIterations = MAX_ITERATIONS_DEFAULT;
+        double maxChange = tolerance;
 
-        double[] centrality = katzCentrality(graph, alpha, beta, maxIterations, tol);
-
-        for (int i = 0; i < centrality.length; i++) {
-            System.out.println("Katz Centrality of node " + i + ": " + centrality[i]);
+        for (int vertex : graph.vertices()) {
+            katz.put(vertex, 1.0);
         }
-    }
 
-    public static double[] katzCentrality(Graph<?, ?> graph, double alpha, double beta, int maxIterations, double tol) {
-        int n = graph.numVertices();
-        double[] centrality = new double[n];
-        int[][] adjMatrix = graph.adjacencyMatrix();
-        Arrays.fill(centrality, beta);
+        while (maxIterations > 0 && maxChange >= tolerance) {
+            maxChange = 0d;
+            for (int v : graph.vertices()) {
+                double contribution = 0d;
 
-        double[] prevCentrality = new double[n];
-
-        for (int iter = 0; iter < maxIterations; iter++) {
-            System.arraycopy(centrality, 0, prevCentrality, 0, n);
-
-            for (int i = 0; i < n; i++) {
-                centrality[i] = beta;
-                for (int j = 0; j < n; j++) {
-                    centrality[i] += alpha * adjMatrix[i][j] * prevCentrality[j];
+                for (int w : graph.neighbors(v)) {
+                    contribution += DAMPING_FACTOR_DEFAULT * katz.get(w) * graph.getEdgeWeight(v, w);
                 }
+
+                double vOldValue = katz.get(v);
+                double vNewValue = contribution + 1;
+                maxChange = Math.max(maxChange, Math.abs(vNewValue - vOldValue));
+                nextKatz.put(v, vNewValue);
             }
 
-            double delta = 0.0;
-            for (int i = 0; i < n; i++) {
-                delta += Math.abs(centrality[i] - prevCentrality[i]);
-            }
-            if (delta < tol) {
-                break;
-            }
+            Map<Integer, Double>  tmp = katz;
+            katz = nextKatz;
+            nextKatz = tmp;
+
+            maxIterations--;
         }
 
-        return centrality;
+        return katz;
     }
 
     public Map<Integer, Double> calculateBetweennessCentrality(Graph<?, ?> graph) {
@@ -114,6 +100,13 @@ public class Centrality {
                     Cb.put(w, Cb.get(w) + dependency.get(w));
                 }
             }
+
+            int n = graph.vertices().length - 1;
+            int factor = (n - 1) * (n - 2);
+            if (factor != 0) {
+                Cb.forEach((v, score) -> Cb.put(v, score / factor));
+            }
+
         }
 
         return Cb;

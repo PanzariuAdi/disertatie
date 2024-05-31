@@ -25,7 +25,8 @@ public class Solution {
 
 const Editor: React.FC<EditorProps> = ({value, selectedAlgorithm, onChange }) => {
     const algorithmReturnTypesMap: Map<string, string> = new Map([
-        ["centrality", "Map<Integer, Double>"],
+        ["betweenness_centrality", "Map<Integer, Double>"],
+        ["katz_centrality", "Map<Integer, Double>"],
         ["another_type", "int"],
     ]);
 

@@ -19,11 +19,11 @@ public class GraphRepository {
         List<TestInput> facebookInputs = new ArrayList<>();
         datasets.forEach(dataset -> facebookInputs.add(getFacebookTestInput(dataset)));
 
-        submitTestCases.put("centrality", facebookInputs);
-        runTestCases.put("centrality", Collections.singletonList(getFacebookTestInput("69")));
+        submitTestCases.put("betweenness_centrality", facebookInputs);
+        submitTestCases.put("katz_centrality", facebookInputs);
 
-        submitTestCases.put("map", facebookInputs);
-        runTestCases.put("map", Collections.singletonList(getFacebookTestInput("69")));
+        runTestCases.put("betweenness_centrality", Collections.singletonList(getFacebookTestInput("69")));
+        runTestCases.put("katz_centrality", Collections.singletonList(getFacebookTestInput("69")));
     }
 
     // load the graph in batches, maybe use an index or something

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.tools.Diagnostic;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,22 +30,26 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ClassNotFoundException.class)
-    public ResponseEntity<String> invalidClassName(ClassNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Class name MUST be Solution!\n" + e.getMessage());
+    public ResponseEntity<List<CodeError>> invalidClassName(ClassNotFoundException e) {
+        List<CodeError> errors = Collections.singletonList(CodeError.of(0, "Class name MUST be Solution!"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(NoSuchMethodException.class)
-    public ResponseEntity<String> invalidFunctionName(NoSuchMethodException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The name of the function is incorrect!\n" + e.getMessage());
+    public ResponseEntity<List<CodeError>> invalidFunctionName(NoSuchMethodException e) {
+        List<CodeError> errors = Collections.singletonList(CodeError.of(0, "The name of the function is incorrect!"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(IllegalAccessException.class)
-    public ResponseEntity<String> missingPublicIdentifier(IllegalAccessException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The class and the method must be public!\n" + e.getMessage());
+    public ResponseEntity<List<CodeError>> missingPublicIdentifier(IllegalAccessException e) {
+        List<CodeError> errors = Collections.singletonList(CodeError.of(0, "The class and the method must be public!\n"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(IncorrectReturnTypeException.class)
-    public ResponseEntity<String> incorrectReturnType(IncorrectReturnTypeException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<List<CodeError>> incorrectReturnType(IncorrectReturnTypeException e) {
+        List<CodeError> errors = Collections.singletonList(CodeError.of(0, "Incorrect return type!\n"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }

@@ -1,7 +1,7 @@
 package info.uaic.ro.sandbox.algorithms;
 
-import info.uaic.ro.sandbox.models.TestInput;
 import info.uaic.ro.sandbox.utils.GraphUtils;
+import info.uaic.ro.sandbox.utils.MeasureUtils;
 import org.graph4j.Graph;
 
 import java.util.HashMap;
@@ -10,28 +10,38 @@ import java.util.Map;
 
 public class CentralityLiveTest {
 
-    private static final List<String> datasets = List.of("0", "107", "348", "414", "686", "698", "1684", "1912", "3437", "3980");
-    private static final Map<String, List<TestInput>> runTestCases = new HashMap<>();
-    private static final Map<String, List<TestInput>> submitTestCases = new HashMap<>();
-    private static final String FACEBOOK_EGO_PATH = "/datasets/ego/facebook/";
-    private static final String EDGES_EXTENSION = ".edges";
+    private static final List<String> SMALL_DATASETS = List.of("0s, 1s, 2s, 3s, 4s");
+    private static final List<String> MID_DATASETS = List.of("0m", "1m", "2m", "3m", "4m", "5m", "6m", "7m", "8m", "9m");
+    private static final List<String> LARGE_DATASETS = List.of("tv_show", "politicians", "government", "public_figures", "athletes", "company", "new_sites", "artists");
+
+    private static final String DATASETS_FACEBOOK = "/datasets/facebook/";
 
     public static void main(String[] args) {
 
-        datasets.forEach(dataset -> {
-            String fullPath = FACEBOOK_EGO_PATH + dataset + EDGES_EXTENSION;
+        String dataset = "4s";
+        Map<Integer, Double> map = new HashMap<>();
+        double durationAvg = 0, memoryAvg = 0;
 
-            Graph<?, ?> graph = GraphUtils.createGraphFromPath(fullPath);
+        System.gc();
 
-            Centrality centrality = new Centrality();
-            Map<Integer, Double> map = centrality.calculateKatzCentrality(graph);
+        String fullPath = DATASETS_FACEBOOK + dataset + ".edges";
 
-            System.out.println("------" + dataset + "------");
-            System.out.print("{");
-            map.forEach((k, v) -> System.out.print("\"" + k + "\": " + v + ", "));
-            System.out.println("}");
-            System.out.println("------" + dataset + "------");
-        });
+        Graph<?, ?> graph = GraphUtils.createGraphFromPath(fullPath);
+
+        Centrality centrality = new Centrality();
+
+        long start = System.currentTimeMillis();
+        map = centrality.calculate(graph);
+        long duration = System.currentTimeMillis() - start;
+        long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+
+        System.out.println("------" + dataset + "------");
+        System.out.print("{");
+        map.forEach((k, v) -> System.out.print("\"" + k + "\": " + v + ", "));
+        System.out.println("}");
+        System.out.println("duration: " + duration);
+        System.out.println("memory: " + memoryUsed);
+        System.out.println("------" + dataset + "------");
     }
 
 }

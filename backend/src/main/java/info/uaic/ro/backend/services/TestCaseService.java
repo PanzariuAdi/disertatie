@@ -18,9 +18,9 @@ public class TestCaseService {
     private final TestCasesRepository testCasesRepository;
     private final AlgorithmTypeRepository algorithmTypeRepository;
 
-    public List<TestCase> findAllBy(String algorithmType, boolean isRun) {
+    public List<TestCase> findAllBy(String algorithmType, String dataset) {
         return algorithmTypeRepository.findByName(algorithmType)
-                .map(type -> testCasesRepository.findAllByAlgorithmTypeAndIsRun(type, isRun)
+                .map(type -> testCasesRepository.findAllByAlgorithmTypeAndDataset(type, dataset)
                         .stream()
                         .sorted(Comparator.comparingInt(TestCase::getCaseNumber))
                         .collect(Collectors.toList()))

@@ -1,5 +1,6 @@
 package info.uaic.ro.sandbox.exceptions;
 
+import info.uaic.ro.sandbox.models.CodeError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,16 +16,16 @@ import java.util.Locale;
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidCodeException.class)
-    public ResponseEntity<List<String>> invalidCodeHandler(InvalidCodeException e) {
-        List<String> compilationErrors = new ArrayList<>();
+    public ResponseEntity<List<CodeError>> invalidCodeHandler(InvalidCodeException e) {
+        List<CodeError> errors = new ArrayList<>();
 
         for (Diagnostic<?> diagnostic : e.getDiagnostics()) {
-            compilationErrors.add(String.format("Error on line %d with message '%s'",
-                    diagnostic.getLineNumber(),
-                    diagnostic.getMessage(Locale.ENGLISH)));
+            if (diagnostic.getLineNumber() != -1) {
+                errors.add(CodeError.of(diagnostic.getLineNumber(), diagnostic.getMessage(Locale.ENGLISH)));
+            }
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(compilationErrors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(ClassNotFoundException.class)

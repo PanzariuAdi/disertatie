@@ -15,7 +15,7 @@ public class CodeRunnerController {
     private final ComparisonService comparisonService;
 
     @PostMapping("/run")
-    public ResponseEntity<Statistics> runCode(@RequestBody String code, @RequestParam String algorithmType, @RequestParam boolean isRun) {
-        return ResponseEntity.ok(comparisonService.getStatistics(code, algorithmType, isRun));
+    public ResponseEntity<Statistics> runCode(@RequestBody String code, @RequestParam String algorithmType, @RequestParam String dataset) {
+        return ResponseEntity.ok(comparisonService.getStatistics(code, algorithmType, dataset));
     }
 }

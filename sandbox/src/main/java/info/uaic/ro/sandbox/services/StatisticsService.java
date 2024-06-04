@@ -4,6 +4,7 @@ import info.uaic.ro.sandbox.models.Result;
 import info.uaic.ro.sandbox.models.Statistics;
 import info.uaic.ro.sandbox.models.TestInput;
 import info.uaic.ro.sandbox.repositories.GraphRepository;
+import info.uaic.ro.sandbox.utils.MeasureUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,26 +20,28 @@ public class StatisticsService {
         this.graphRepository = graphRepository;
     }
 
-    public Statistics createStatistics(String algorithm, String algorithmType, boolean isRun) {
+    public Statistics createStatistics(String code, String dataset) {
         Statistics statistics = new Statistics();
 
-        List<TestInput> inputs = graphRepository.getAllTestInputsAfter(algorithmType, isRun);
+        List<TestInput> inputs = graphRepository.getInputsFor(dataset);
 
         inputs.forEach(input -> {
             long start = System.currentTimeMillis();
-            Object result = runnerService.runCode(algorithm, input.getGraph());
+            Object result = runnerService.runCode(code, input.getGraph());
             long duration = System.currentTimeMillis() - start;
-            createAndAddResultToStatistics(statistics, result, duration);
+
+            long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+            createAndAddResultToStatistics(statistics, result, duration, memoryUsed);
         });
 
         return statistics;
     }
 
-    private void createAndAddResultToStatistics(Statistics statistics, Object object, long duration) {
+    private void createAndAddResultToStatistics(Statistics statistics, Object object, long duration, long memoryUsed) {
         Result result = new Result();
         result.setActual(object);
         result.setDuration(duration);
-        result.setMemory(0);
+        result.setMemory(memoryUsed);
 
         statistics.addResult(result);
     }

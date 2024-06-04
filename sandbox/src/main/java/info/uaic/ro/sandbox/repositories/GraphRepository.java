@@ -9,34 +9,48 @@ import java.util.*;
 @Component
 public class GraphRepository {
 
-    private static final List<String> datasets = List.of("0", "107", "348", "414", "686", "698", "1684", "1912", "3437", "3980");
-    private static final Map<String, List<TestInput>> runTestCases = new HashMap<>();
-    private static final Map<String, List<TestInput>> submitTestCases = new HashMap<>();
-    private static final String FACEBOOK_EGO_PATH = "/datasets/ego/facebook/";
-    private static final String EDGES_EXTENSION = ".edges";
+    private static final List<String> VERY_SMALL_DATASETS = List.of("0s", "1s", "2s", "3s", "4s");
+    private static final List<String> SMALL_DATASETS = List.of("0m", "1m", "2m", "3m", "4m", "5m");
+    private static final List<String> MID_DATASETS = List.of("6m", "7m", "8m", "9m");
+    private static final List<String> LARGE_DATASETS = List.of("0l", "1l", "2l");
+    private static final List<String> VERY_LARGE_DATASETS = List.of("3l", "4l", "5l");
 
-    static {
-        List<TestInput> facebookInputs = new ArrayList<>();
-        datasets.forEach(dataset -> facebookInputs.add(getFacebookTestInput(dataset)));
+    private final List<TestInput> verySmallDatasets;
+    private final List<TestInput> smallDatasets;
+    private final List<TestInput> midDatasets;
+    private final List<TestInput> largeDatasets;
+    private final List<TestInput> veryLargeDatasets;
 
-        submitTestCases.put("betweenness_centrality", facebookInputs);
-        submitTestCases.put("katz_centrality", facebookInputs);
+    public GraphRepository() {
+        this.verySmallDatasets = new ArrayList<>();
+        this.smallDatasets = new ArrayList<>();
+        this.midDatasets = new ArrayList<>();
+        this.largeDatasets = new ArrayList<>();
+        this.veryLargeDatasets = new ArrayList<>();
 
-        runTestCases.put("betweenness_centrality", Collections.singletonList(getFacebookTestInput("69")));
-        runTestCases.put("katz_centrality", Collections.singletonList(getFacebookTestInput("69")));
+        VERY_SMALL_DATASETS.forEach(ds -> verySmallDatasets.add(getTestInput(ds)));
+        SMALL_DATASETS.forEach(ds -> smallDatasets.add(getTestInput(ds)));
+        MID_DATASETS.forEach(ds -> midDatasets.add(getTestInput(ds)));
+        LARGE_DATASETS.forEach(ds -> largeDatasets.add(getTestInput(ds)));
+        VERY_LARGE_DATASETS.forEach(ds -> veryLargeDatasets.add(getTestInput(ds)));
     }
 
-    // load the graph in batches, maybe use an index or something
-    public List<TestInput> getAllTestInputsAfter(String algorithmType, boolean isRun) {
-        List<TestInput> list = isRun ? runTestCases.get(algorithmType) : submitTestCases.get(algorithmType);
-
-        return list == null ? new ArrayList<>() : list;
+    public List<TestInput> getInputsFor(String dataset) {
+        return switch (dataset) {
+            case "verySmall" -> verySmallDatasets;
+            case "small" -> smallDatasets;
+            case "mid" -> midDatasets;
+            case "large" -> largeDatasets;
+            default -> veryLargeDatasets;
+        };
     }
 
-    private static TestInput getFacebookTestInput(String id) {
+    private static TestInput getTestInput(String id) {
+        String path = "/datasets/facebook/" + id + ".edges";
+
         return TestInput.builder()
                 .id(id)
-                .graph(GraphUtils.createGraphFromPath(FACEBOOK_EGO_PATH + id + EDGES_EXTENSION))
+                .graph(GraphUtils.createGraphFromPath(path))
                 .build();
     }
 }

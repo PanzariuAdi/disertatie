@@ -4,10 +4,16 @@ import ResultComponent from "./result";
 import Editor from "./editor";
 import Controls from "./controls";
 import Loader from "./loader";
+import ErrorComponent from "./errors";
 
 interface Algorithm {
     id: number;
     name: string;
+}
+
+interface Errors {
+    line: number;
+    message: string;
 }
 
 export function Page() {
@@ -16,8 +22,11 @@ export function Page() {
     const [code, setCode] = useState<string>('');
     const [response, setResponse] = useState<any>();
     const [fetching, setIsFetching] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<Errors[]>([]);
     const [algorithmTypes, setAlgorithmTypes] = useState<Algorithm[]>([]);
     const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('');
+    const [selectedDataset, setSelectedDataset] = useState<string>('');
 
     useEffect(() => {
         loadAlgorithmTypes();
@@ -34,28 +43,38 @@ export function Page() {
             });
     };
 
-    const handleRequest = (isRun: boolean) => {
+    const handleRequest = () => {
         if (selectedAlgorithm === '') return;
 
         const runCodeUrl = backendUrl + "/code/run";
         setIsFetching(true);
         axios.post(runCodeUrl, code, {
-            params: { algorithmType: selectedAlgorithm, isRun: isRun },
+            params: { algorithmType: selectedAlgorithm, dataset: selectedDataset },
             headers: { 'Content-Type': 'text/plain' }
         })
         .then(res => {
             setResponse(res.data);
             setIsFetching(false);
+            setError(false);
         })
         .catch(error => {
-            console.log("Error " + error);
+            if(axios.isAxiosError(error) && error.response?.status === 400) {
+                const errorBody = error.response?.data;
+                setErrorMessage(error.response?.data || 'Bad request');
+            } else {
+                setErrorMessage(error.message);
+            }
             setIsFetching(false);
-            setResponse(error);
+            setError(true);
         });
     };
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
         setSelectedAlgorithm(event.target.value);
+    };
+
+    const handleSelectDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+        setSelectedDataset(event.target.value);
     };
 
     return (
@@ -71,12 +90,14 @@ export function Page() {
                 <Controls
                     algorithmTypes={algorithmTypes}
                     selectedAlgorithm={selectedAlgorithm}
+                    selectedDataset={selectedDataset}
                     handleRequest={handleRequest}
                     handleSelectChange={handleSelectChange}
+                    handleSelectDatasetChange={handleSelectDatasetChange}
                 />
 
                 <div className="rounded-lg flex-1 bg-yellow-300 flex overflow-y-auto">
-                    {fetching ? <Loader /> : response && <ResultComponent data={response} />}
+                    {error ? <ErrorComponent errors={errorMessage} /> : fetching ? <Loader /> : response && <ResultComponent data={response} />}
                 </div>
             </div>
         </div>

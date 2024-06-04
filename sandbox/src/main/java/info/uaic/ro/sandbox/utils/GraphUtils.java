@@ -1,5 +1,6 @@
 package info.uaic.ro.sandbox.utils;
 
+import lombok.experimental.UtilityClass;
 import org.graph4j.Edge;
 import org.graph4j.Graph;
 import org.graph4j.GraphBuilder;
@@ -8,6 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@UtilityClass
 public class GraphUtils {
 
     public static Graph<Object, Integer> createGraphFromPath(String path) {

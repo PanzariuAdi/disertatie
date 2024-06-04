@@ -23,9 +23,9 @@ public class ComparisonService {
     private final SandboxClient sandboxClient;
     private final TestCaseService testCaseService;
 
-    public Statistics getStatistics(String code, String algorithmType, boolean isRun) {
-        SandboxResult<?> sandboxResult = sandboxClient.getResultFor(code, algorithmType, isRun);
-        List<TestCase> expectedValues = testCaseService.findAllBy(algorithmType, isRun);
+    public Statistics getStatistics(String code, String algorithmType, String dataset) {
+        SandboxResult<?> sandboxResult = sandboxClient.getResultFor(code, dataset);
+        List<TestCase> expectedValues = testCaseService.findAllBy(algorithmType, dataset);
 
         List<CaseResult<?>> caseResultList = generateCaseResults(sandboxResult, expectedValues);
         return buildStatistics(caseResultList);

@@ -46,7 +46,7 @@ public class Centrality {
         return katz;
     }
 
-    public Map<Integer, Double> calculateBetweennessCentrality(Graph<?, ?> graph) {
+    public Map<Integer, Double> calculate(Graph<?, ?> graph) {
         Map<Integer, Double> Cb = new HashMap<>();
 
         for (int vertex : graph.vertices()) {
@@ -100,13 +100,13 @@ public class Centrality {
                     Cb.put(w, Cb.get(w) + dependency.get(w));
                 }
             }
+        }
 
-            int n = graph.vertices().length - 1;
-            int factor = (n - 1) * (n - 2);
-            if (factor != 0) {
-                Cb.forEach((v, score) -> Cb.put(v, score / factor));
-            }
 
+        int n = graph.vertices().length - 1;
+        int factor = (n - 1) * (n - 2);
+        if (factor != 0) {
+            Cb.forEach((v, score) -> Cb.put(v, score / factor));
         }
 
         return Cb;

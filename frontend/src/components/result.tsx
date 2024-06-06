@@ -51,7 +51,7 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
     return (
         <div className="w-full p-4">
             {
-                <div className="border border-indigo-500/50 rounded-lg p-4 mb-4 transition-all duration-300 ease-in-out">
+                <div className="border border-dracula-purple rounded-lg p-4 mb-4 transition-all duration-300 ease-in-out">
                     <h3 className="text-lg font-semibold">Correct/Total: { data.caseResultList.filter(result => result.correct === true).length }/{ data.caseResultList.length } </h3>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -80,7 +80,7 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
 
             {
                 data.caseResultList.map((result, index) => (
-                    <div key={index} className="border border-indigo-500/50 rounded-lg p-4 mb-4 transition-all duration-300 ease-in-out">
+                    <div key={index} className="border border-dracula-purple rounded-lg p-4 mb-4 transition-all duration-300 ease-in-out">
                         <div
                             className="flex justify-between items-center cursor-pointer"
                             onClick={() => handleAccordionClick(index)} >

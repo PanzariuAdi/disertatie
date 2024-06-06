@@ -14,7 +14,7 @@ const ErrorComponent: React.FC<Props> = ({ errors }) => {
         <div className="w-full p-4">
             {
                 errors.map((error, index) => (
-                    <div key={index} className="border border-red-500/50 rounded-lg p-4 mb-4 overflow-auto">
+                    <div key={index} className="border border-dracula-pink rounded-lg p-4 mb-4 overflow-auto">
                         <div className="">
                             <pre>
                                 Error {index}: {error.message} on line {error.line}

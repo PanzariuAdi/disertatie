@@ -78,7 +78,7 @@ export function Page() {
     };
 
     return (
-        <div className="bg-gray-200 flex h-screen w-screen flex justify-between ">
+        <div className="bg-[#21222c] flex h-screen w-screen flex justify-between ">
             <div className="w-1/2 p-1 overflow-auto shadow-lg rounded-lg m-1">
                 <Editor
                     value={code}
@@ -96,7 +96,7 @@ export function Page() {
                     handleSelectDatasetChange={handleSelectDatasetChange}
                 />
 
-                <div className="rounded-lg flex-1 bg-yellow-300 flex overflow-y-auto">
+                <div className="rounded-lg flex-1 bg-dracula-background text-dracula-foreground flex overflow-y-auto">
                     {error ? <ErrorComponent errors={errorMessage} /> : fetching ? <Loader /> : response && <ResultComponent data={response} />}
                 </div>
             </div>

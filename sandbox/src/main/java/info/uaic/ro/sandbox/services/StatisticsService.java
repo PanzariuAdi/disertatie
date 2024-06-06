@@ -28,6 +28,7 @@ public class StatisticsService {
         inputs.forEach(input -> {
             long start = System.currentTimeMillis();
             Object result = runnerService.runCode(code, input.getGraph());
+            System.out.println(result);
             long duration = System.currentTimeMillis() - start;
 
             long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());

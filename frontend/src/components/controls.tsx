@@ -20,14 +20,14 @@ const Controls: React.FC<ControlsProps> = ({ algorithmTypes, selectedAlgorithm, 
     };
 
     return (
-        <div className="h-1/2 rounded-lg bg-blue-300 flex-1 mb-2 p-2 ">
+        <div className="h-1/2 rounded-lg bg-dracula-background flex-1 mb-2 p-2 ">
             <div className="p-4">
                 <div className="m-2">
                     <select
                         id="algorithmTypes"
                         value={selectedAlgorithm}
                         onChange={handleSelectChange}
-                        className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        className="w-full bg-dracula-currentLine border border-dracula-purple text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>Choose algorithm type</option>
                         {
                             algorithmTypes.map(algorithm => (
@@ -44,7 +44,7 @@ const Controls: React.FC<ControlsProps> = ({ algorithmTypes, selectedAlgorithm, 
                         id="datasetCategory"
                         value={selectedDataset}
                         onChange={handleSelectDatasetChange}
-                        className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        className="w-full bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>Choose dataset size</option>
                         <option key="verySmall" value="verySmall">very small</option>
                         <option key="small" value="small">small</option>
@@ -56,7 +56,7 @@ const Controls: React.FC<ControlsProps> = ({ algorithmTypes, selectedAlgorithm, 
             </div>
 
             <div className="p-4 m-2">
-                <button className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4" onClick={handleSubmit}>Submit</button>
+                <button className="w-full text-gray-900 bg-dracula-purple px-4 py-2 rounded shadow hover:bg-dracula-pink transition duration-300 ease-in-out" onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     );

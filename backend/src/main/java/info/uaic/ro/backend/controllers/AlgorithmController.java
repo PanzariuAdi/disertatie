@@ -2,7 +2,6 @@ package info.uaic.ro.backend.controllers;
 
 import info.uaic.ro.backend.models.dto.AlgorithmDto;
 import info.uaic.ro.backend.models.dto.AlgorithmTypeDto;
-import info.uaic.ro.backend.models.dto.SandboxResultDto;
 import info.uaic.ro.backend.services.AlgorithmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

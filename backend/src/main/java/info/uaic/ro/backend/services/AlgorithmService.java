@@ -3,18 +3,23 @@ package info.uaic.ro.backend.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import info.uaic.ro.backend.clients.SandboxClient;
+import info.uaic.ro.backend.exceptions.BackendException;
 import info.uaic.ro.backend.mappers.AlgorithmMapper;
 import info.uaic.ro.backend.models.dto.AlgorithmDto;
 import info.uaic.ro.backend.models.dto.AlgorithmTypeDto;
+import info.uaic.ro.backend.models.dto.ErrorDto;
 import info.uaic.ro.backend.models.dto.SandboxResultDto;
 import info.uaic.ro.backend.models.entities.AlgorithmType;
 import info.uaic.ro.backend.models.entities.TestCase;
 import info.uaic.ro.backend.repositories.AlgorithmTypeRepository;
 import info.uaic.ro.backend.repositories.TestCasesRepository;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -64,10 +69,18 @@ public class AlgorithmService {
 
     }
 
+    @SneakyThrows
     private AlgorithmType saveAlgorithmType(AlgorithmDto algorithmDto) {
         AlgorithmTypeDto algorithmTypeDto = new AlgorithmTypeDto(algorithmDto.getName(), algorithmDto.getSignature());
 
         AlgorithmType algorithmType = algorithmMapper.toEntity(algorithmTypeDto);
+
+        Optional<AlgorithmType> optional = algorithmTypeRepository.findByName(algorithmType.getName());
+
+        if (optional.isPresent()) {
+            throw new BackendException(Collections.singletonList(new ErrorDto("Algorithm already exists in the db!")));
+        }
+
         return algorithmTypeRepository.save(algorithmType);
     }
 

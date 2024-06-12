@@ -18,20 +18,8 @@ public class StatisticsService {
     private final GraphRepository graphRepository;
 
     public Statistics createStatistics(String code, String datasetCategory) {
-        Statistics statistics = new Statistics();
-
         List<TestInput> inputs = graphRepository.getInputsFor(datasetCategory);
-
-        inputs.forEach(input -> {
-            long start = System.currentTimeMillis();
-            Object actual = runnerService.runCode(code, input.getGraph());
-            long duration = System.currentTimeMillis() - start;
-
-            long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
-            createAndAddResultToStatistics(statistics, actual, duration, memoryUsed, input.getDataset(), input.getDatasetCategory());
-        });
-
-        return statistics;
+        return createStatistics(code, inputs);
     }
 
     public Statistics createStatistics(String code, List<TestInput> inputs) {

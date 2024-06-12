@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class CodeErrorException extends Exception {
-    private List<CodeErrorDto> codeErrorDtos;
+    private List<CodeErrorDto> errors;
 
-    public CodeErrorException(List<CodeErrorDto> codeErrorDtos) {
-        this.codeErrorDtos = codeErrorDtos;
+    public CodeErrorException(List<CodeErrorDto> errors) {
+        this.errors = errors;
     }
 }

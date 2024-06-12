@@ -11,5 +11,7 @@ import java.util.List;
 public interface TestCasesRepository extends JpaRepository<TestCase, Long> {
 
     List<TestCase> findAllByAlgorithmTypeAndDatasetCategory(AlgorithmType algorithmType, String datasetCategory);
+    List<TestCase> findAllByAlgorithmType(AlgorithmType algorithmType);
+    List<TestCase> findAllByDatasetCategory(String datasetCategory);
 
 }

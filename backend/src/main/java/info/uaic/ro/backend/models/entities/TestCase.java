@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "test_cases")
-@DiscriminatorColumn(name = "test_case_type", discriminatorType = DiscriminatorType.STRING)
 public class TestCase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

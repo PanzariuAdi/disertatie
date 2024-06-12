@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface TestCasesRepository extends JpaRepository<TestCase, Long> {
 
-    List<TestCase> findAllByAlgorithmTypeAndDataset(AlgorithmType algorithmType, String dataset);
+    List<TestCase> findAllByAlgorithmTypeAndDatasetCategory(AlgorithmType algorithmType, String datasetCategory);
 
 }

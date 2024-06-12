@@ -5,6 +5,8 @@ import info.uaic.ro.sandbox.utils.GraphUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class GraphRepository {
@@ -28,15 +30,15 @@ public class GraphRepository {
         this.largeDatasets = new ArrayList<>();
         this.veryLargeDatasets = new ArrayList<>();
 
-        VERY_SMALL_DATASETS.forEach(ds -> verySmallDatasets.add(getTestInput(ds)));
-        SMALL_DATASETS.forEach(ds -> smallDatasets.add(getTestInput(ds)));
-        MID_DATASETS.forEach(ds -> midDatasets.add(getTestInput(ds)));
-        LARGE_DATASETS.forEach(ds -> largeDatasets.add(getTestInput(ds)));
-        VERY_LARGE_DATASETS.forEach(ds -> veryLargeDatasets.add(getTestInput(ds)));
+        VERY_SMALL_DATASETS.forEach(ds -> verySmallDatasets.add(getTestInput(ds, "verySmall")));
+        SMALL_DATASETS.forEach(ds -> smallDatasets.add(getTestInput(ds, "small")));
+        MID_DATASETS.forEach(ds -> midDatasets.add(getTestInput(ds, "mid")));
+        LARGE_DATASETS.forEach(ds -> largeDatasets.add(getTestInput(ds, "large")));
+        VERY_LARGE_DATASETS.forEach(ds -> veryLargeDatasets.add(getTestInput(ds, "veryLarge")));
     }
 
-    public List<TestInput> getInputsFor(String dataset) {
-        return switch (dataset) {
+    public List<TestInput> getInputsFor(String datasetCategory) {
+        return switch (datasetCategory) {
             case "verySmall" -> verySmallDatasets;
             case "small" -> smallDatasets;
             case "mid" -> midDatasets;
@@ -45,12 +47,19 @@ public class GraphRepository {
         };
     }
 
-    private static TestInput getTestInput(String id) {
-        String path = "/datasets/facebook/" + id + ".edges";
+    public List<TestInput> getAllInputs() {
+        return Stream.of(verySmallDatasets, smallDatasets, midDatasets)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    private static TestInput getTestInput(String dataset, String datasetCategory) {
+        String path = "/datasets/facebook/" + dataset + ".edges";
 
         return TestInput.builder()
-                .id(id)
-                .graph(GraphUtils.createGraphFromPath(path))
+                .dataset(dataset)
+                .datasetCategory(datasetCategory)
+                .graph(GraphUtils.createUnweightedGraphFromPath(path))
                 .build();
     }
 }

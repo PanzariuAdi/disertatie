@@ -46,17 +46,17 @@ const Controls: React.FC<ControlsProps> = ({ algorithmTypes, selectedAlgorithm, 
                         onChange={handleSelectDatasetChange}
                         className="w-full bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>Choose dataset size</option>
-                        <option key="verySmall" value="verySmall">very small</option>
-                        <option key="small" value="small">small</option>
-                        <option key="medium" value="mid">mid</option>
-                        <option key="large" value="large">large</option>
-                        <option key="veryLarge" value="veryLarge">very large</option>
+                        <option key="verySmall" value="verySmall">very small (5 - 50 nodes)</option>
+                        <option key="small" value="small">small (350 - 1900 nodes)</option>
+                        <option key="medium" value="mid">mid (3500 - 4000 nodes)</option>
+                        <option key="large" value="large">large (4000 - 7000 nodes)</option>
+                        <option key="veryLarge" value="veryLarge">very large (11500 - 14000 nodes)</option>
                     </select>
                 </div>
             </div>
 
             <div className="p-4 m-2">
-                <button className="w-full text-gray-900 bg-dracula-purple px-4 py-2 rounded shadow hover:bg-dracula-pink transition duration-300 ease-in-out" onClick={handleSubmit}>Submit</button>
+                <button className="w-full text-gray-900 bg-dracula-purple px-4 py-2 rounded-lg shadow hover:bg-dracula-pink transition duration-300 ease-in-out" onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     );

@@ -78,28 +78,30 @@ export function Page() {
     };
 
     return (
-        <div className="bg-[#21222c] flex h-screen w-screen flex justify-between ">
-            <div className="w-1/2 p-1 overflow-auto shadow-lg rounded-lg m-1">
-                <Editor
-                    value={code}
-                    selectedAlgorithm={selectedAlgorithm}
-                    onChange={setCode} />
-            </div>
+            <div className="h-screen w-screen overflow-hidden m-0 p-0">
+                <div className="bg-[#21222c] flex h-screen w-screen flex justify-between ">
+                    <div className="w-1/2 p-1 overflow-auto shadow-lg rounded-lg m-1">
+                        <Editor
+                            value={code}
+                            selectedAlgorithm={selectedAlgorithm}
+                            onChange={setCode} />
+                    </div>
 
-            <div className="w-1/2 p-1 flex flex-col shadow-lg rounded-lg m-1">
-                <Controls
-                    algorithmTypes={algorithmTypes}
-                    selectedAlgorithm={selectedAlgorithm}
-                    selectedDataset={selectedDataset}
-                    handleRequest={handleRequest}
-                    handleSelectChange={handleSelectChange}
-                    handleSelectDatasetChange={handleSelectDatasetChange}
-                />
+                    <div className="w-1/2 p-1 flex flex-col shadow-lg rounded-lg m-1">
+                        <Controls
+                            algorithmTypes={algorithmTypes}
+                            selectedAlgorithm={selectedAlgorithm}
+                            selectedDataset={selectedDataset}
+                            handleRequest={handleRequest}
+                            handleSelectChange={handleSelectChange}
+                            handleSelectDatasetChange={handleSelectDatasetChange}
+                        />
 
-                <div className="rounded-lg flex-1 bg-dracula-background text-dracula-foreground flex overflow-y-auto">
-                    {error ? <ErrorComponent errors={errorMessage} /> : fetching ? <Loader /> : response && <ResultComponent data={response} />}
+                        <div className="rounded-lg flex-1 bg-dracula-background text-dracula-foreground flex overflow-y-auto">
+                            {error ? <ErrorComponent errors={errorMessage} /> : fetching ? <Loader /> : response && <ResultComponent data={response} />}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
     );
 }

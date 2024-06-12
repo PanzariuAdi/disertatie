@@ -3,9 +3,12 @@ package info.uaic.ro.backend.models.dto;
 import lombok.Data;
 
 @Data
-public class SandboxCaseResult<T> {
-    private int caseNumber;
+public class SandboxCaseDto<T> {
+
+    private T actual;
     private long duration;
     private long memory;
-    private T actual;
+    private String dataset;
+    private String datasetCategory;
+
 }

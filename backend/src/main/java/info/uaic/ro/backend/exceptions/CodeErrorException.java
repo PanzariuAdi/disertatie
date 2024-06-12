@@ -1,6 +1,6 @@
 package info.uaic.ro.backend.exceptions;
 
-import info.uaic.ro.backend.models.dto.CodeError;
+import info.uaic.ro.backend.models.dto.CodeErrorDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class CodeErrorException extends Exception {
-    private List<CodeError> codeErrors;
+    private List<CodeErrorDto> codeErrorDtos;
 
-    public CodeErrorException(List<CodeError> codeErrors) {
-        this.codeErrors = codeErrors;
+    public CodeErrorException(List<CodeErrorDto> codeErrorDtos) {
+        this.codeErrorDtos = codeErrorDtos;
     }
 }

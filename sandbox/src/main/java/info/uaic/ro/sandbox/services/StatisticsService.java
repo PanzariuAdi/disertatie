@@ -5,44 +5,57 @@ import info.uaic.ro.sandbox.models.Statistics;
 import info.uaic.ro.sandbox.models.TestInput;
 import info.uaic.ro.sandbox.repositories.GraphRepository;
 import info.uaic.ro.sandbox.utils.MeasureUtils;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
+@AllArgsConstructor
 public class StatisticsService {
 
     private final RunnerService runnerService;
     private final GraphRepository graphRepository;
 
-    public StatisticsService(RunnerService runnerService, GraphRepository graphRepository) {
-        this.runnerService = runnerService;
-        this.graphRepository = graphRepository;
-    }
-
-    public Statistics createStatistics(String code, String dataset) {
+    public Statistics createStatistics(String code, String datasetCategory) {
         Statistics statistics = new Statistics();
 
-        List<TestInput> inputs = graphRepository.getInputsFor(dataset);
+        List<TestInput> inputs = graphRepository.getInputsFor(datasetCategory);
 
         inputs.forEach(input -> {
             long start = System.currentTimeMillis();
-            Object result = runnerService.runCode(code, input.getGraph());
-            System.out.println(result);
+            Object actual = runnerService.runCode(code, input.getGraph());
             long duration = System.currentTimeMillis() - start;
 
             long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
-            createAndAddResultToStatistics(statistics, result, duration, memoryUsed);
+            createAndAddResultToStatistics(statistics, actual, duration, memoryUsed, input.getDataset(), input.getDatasetCategory());
         });
 
         return statistics;
     }
 
-    private void createAndAddResultToStatistics(Statistics statistics, Object object, long duration, long memoryUsed) {
+    public Statistics createStatistics(String code, List<TestInput> inputs) {
+        Statistics statistics = new Statistics();
+
+        inputs.forEach(input -> {
+            long start = System.currentTimeMillis();
+            Object actual = runnerService.runCode(code, input.getGraph());
+            long duration = System.currentTimeMillis() - start;
+
+            long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+            createAndAddResultToStatistics(statistics, actual, duration, memoryUsed, input.getDataset(), input.getDatasetCategory());
+        });
+
+        return statistics;
+    }
+
+    private void createAndAddResultToStatistics(Statistics statistics, Object object, long duration, long memoryUsed, String dataset, String datasetCategory) {
         Result result = new Result();
         result.setActual(object);
         result.setDuration(duration);
         result.setMemory(memoryUsed);
+        result.setDataset(dataset);
+        result.setDatasetCategory(datasetCategory);
 
         statistics.addResult(result);
     }

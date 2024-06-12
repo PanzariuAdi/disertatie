@@ -11,7 +11,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Statistics {
-    private List<CaseResult<?>> caseResultList;
+public class StatisticsDto {
+
+    private List<RunEvaluationComparison<?>> runEvaluationComparisonResultList;
     private int totalCases;
+
 }

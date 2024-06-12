@@ -6,9 +6,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "test_cases")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "test_case_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class TestCase {
+public class TestCase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,8 +16,11 @@ public abstract class TestCase {
     @JoinColumn(name = "algorithm_type_id", nullable = false)
     private AlgorithmType algorithmType;
 
-    private int caseNumber;
-    private int duration;
-    private int memory;
+    private long duration;
+    private long memory;
     private String dataset;
+    private String datasetCategory;
+
+    @Lob
+    private String expected;
 }

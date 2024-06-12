@@ -12,7 +12,7 @@ import java.util.List;
 @UtilityClass
 public class GraphUtils {
 
-    public static Graph<Object, Integer> createGraphFromPath(String path) {
+    public static Graph<Object, Integer> createUnweightedGraphFromPath(String path) {
         List<Edge<String>> edges = new ArrayList<>();
         int maxVertex = 0;
 

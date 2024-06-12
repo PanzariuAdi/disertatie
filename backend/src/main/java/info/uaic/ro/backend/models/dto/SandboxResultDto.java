@@ -5,6 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SandboxResult<T> {
-    List<SandboxCaseResult<T>> results;
+public class SandboxResultDto<T> {
+
+    List<SandboxCaseDto<T>> results;
+
 }

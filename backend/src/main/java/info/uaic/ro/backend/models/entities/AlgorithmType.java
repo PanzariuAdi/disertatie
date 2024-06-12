@@ -13,4 +13,6 @@ public class AlgorithmType {
     private Long id;
 
     private String name;
+    private String signature;
+
 }

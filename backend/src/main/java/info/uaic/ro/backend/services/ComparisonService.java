@@ -1,60 +1,55 @@
 package info.uaic.ro.backend.services;
 
-import info.uaic.ro.backend.clients.SandboxClient;
-import info.uaic.ro.backend.models.dto.CaseResult;
-import info.uaic.ro.backend.models.dto.SandboxCaseResult;
-import info.uaic.ro.backend.models.dto.SandboxResult;
-import info.uaic.ro.backend.models.dto.Statistics;
-import info.uaic.ro.backend.models.entities.TestCase;
-import info.uaic.ro.backend.services.handlers.TestCaseHandler;
-import info.uaic.ro.backend.services.handlers.TestCaseHandlerRegistry;
+import info.uaic.ro.backend.models.dto.RunEvaluationComparison;
+import info.uaic.ro.backend.models.dto.SandboxCaseDto;
+import info.uaic.ro.backend.models.dto.StatisticsDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
 public class ComparisonService {
 
-    private final SandboxClient sandboxClient;
+    private final SandboxService sandboxService;
     private final TestCaseService testCaseService;
 
-    public Statistics getStatistics(String code, String algorithmType, String dataset) {
-        SandboxResult<?> sandboxResult = sandboxClient.getResultFor(code, dataset);
-        List<TestCase> expectedValues = testCaseService.findAllBy(algorithmType, dataset);
+    public StatisticsDto getStatistics(String code, String algorithmType, String datasetCategory) {
+        Map<String, SandboxCaseDto<?>> actualMap = sandboxService.getActualMap(code, datasetCategory);
+        Map<String, RunEvaluationComparison<?>> expectedMap = testCaseService.findAllBy(algorithmType, datasetCategory);
 
-        List<CaseResult<?>> caseResultList = generateCaseResults(sandboxResult, expectedValues);
-        return buildStatistics(caseResultList);
-    }
+        List<RunEvaluationComparison<?>> runEvaluationComparisonResultList = getCaseResultList(actualMap, expectedMap);
 
-    private List<CaseResult<?>> generateCaseResults(SandboxResult<?> sandboxResult, List<TestCase> expected) {
-        return IntStream.range(0, Math.min(sandboxResult.getResults().size(), expected.size()))
-                .mapToObj(i -> createCaseResult(sandboxResult, expected, i))
-                .collect(Collectors.toList());
-    }
-
-    private CaseResult<?> createCaseResult(SandboxResult<?> sandboxResult, List<TestCase> expected, int index) {
-        TestCase testCase = expected.get(index);
-        SandboxCaseResult<?> sandboxCaseResult = sandboxResult.getResults().get(index);
-        return getHandler(testCase)
-                .map(handler -> handler.createCaseResult(testCase, sandboxCaseResult))
-                .orElseThrow(() -> new IllegalArgumentException("No handler registered for " + testCase.getClass()));
-    }
-
-    @SuppressWarnings("unchecked")
-    private Optional<TestCaseHandler<TestCase>> getHandler(TestCase testCase) {
-        return Optional.ofNullable((TestCaseHandler<TestCase>) TestCaseHandlerRegistry.getHandler(testCase.getClass()));
-    }
-
-    private Statistics buildStatistics(List<CaseResult<?>> caseResultList) {
-        return Statistics.builder()
-                .totalCases(caseResultList.size())
-                .caseResultList(caseResultList)
+        return StatisticsDto.builder()
+                .totalCases(runEvaluationComparisonResultList.size())
+                .runEvaluationComparisonResultList(runEvaluationComparisonResultList)
                 .build();
+    }
+
+    private List<RunEvaluationComparison<?>> getCaseResultList(Map<String, SandboxCaseDto<?>> actualMap, Map<String, RunEvaluationComparison<?>> expectedMap) {
+        return expectedMap.entrySet().stream()
+                .map(entry -> {
+                    String dataset = entry.getKey();
+                    RunEvaluationComparison<?> expected = entry.getValue();
+                    SandboxCaseDto<?> actual = actualMap.get(dataset);
+
+                    return RunEvaluationComparison.builder()
+                            .expected(expected.getExpected())
+                            .expectedDuration(expected.getDuration())
+                            .expectedMemory(expected.getMemory())
+                            .actual(actual.getActual())
+                            .duration(actual.getDuration())
+                            .memory(actual.getMemory())
+                            .correct(expected.getExpected().equals(actual.getActual()))
+                            .dataset(dataset)
+                            .build();
+                })
+                .sorted(Comparator.comparing(RunEvaluationComparison::getDataset))
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }

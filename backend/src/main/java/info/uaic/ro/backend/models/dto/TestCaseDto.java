@@ -1,13 +1,15 @@
 package info.uaic.ro.backend.models.dto;
 
-import info.uaic.ro.backend.models.entities.AlgorithmType;
+import lombok.Data;
 
+@Data
 public class TestCaseDto {
 
-    private AlgorithmType algorithmType;
-    private int duration;
-    private int memory;
+    private long id;
+    private AlgorithmTypeDto algorithmType;
+    private long duration;
+    private long memory;
     private String dataset;
     private String datasetCategory;
-    private String expected;
+
 }

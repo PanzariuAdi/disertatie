@@ -59,7 +59,6 @@ export function Page() {
         })
         .catch(error => {
             if(axios.isAxiosError(error) && error.response?.status === 400) {
-                const errorBody = error.response?.data;
                 setErrorMessage(error.response?.data || 'Bad request');
             } else {
                 setErrorMessage(error.message);

@@ -3,7 +3,6 @@ package info.uaic.ro.backend.clients;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import info.uaic.ro.backend.exceptions.CodeErrorException;
-import info.uaic.ro.backend.models.dto.AlgorithmDto;
 import info.uaic.ro.backend.models.dto.CodeErrorDto;
 import info.uaic.ro.backend.models.dto.SandboxResultDto;
 import org.springframework.beans.factory.annotation.Value;

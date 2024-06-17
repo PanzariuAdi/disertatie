@@ -9,6 +9,6 @@ public class AlgorithmDto {
     private String signature;
     private String code;
     private boolean weighted;
-    private boolean unweighted;
+    private boolean directed;
 
 }

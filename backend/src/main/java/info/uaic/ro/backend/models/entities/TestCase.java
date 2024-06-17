@@ -11,6 +11,9 @@ public class TestCase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private boolean directed;
+    private boolean weighted;
+
     @ManyToOne
     @JoinColumn(name = "algorithm_type_id", nullable = false)
     private AlgorithmType algorithmType;

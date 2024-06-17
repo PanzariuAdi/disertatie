@@ -8,12 +8,8 @@ import {
   Route,
   Routes 
 } from 'react-router-dom';
-import { useState } from 'react';
 
 function App() {
-
-  const [isLogged, setIsLogged] = useState(false);
-
   return (
     <Router>
       <div className="w-screen h-screen overflow-hidden">

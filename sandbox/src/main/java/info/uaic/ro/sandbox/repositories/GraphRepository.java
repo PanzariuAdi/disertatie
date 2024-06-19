@@ -2,64 +2,69 @@ package info.uaic.ro.sandbox.repositories;
 
 import info.uaic.ro.sandbox.models.TestInput;
 import info.uaic.ro.sandbox.utils.GraphUtils;
+import info.uaic.ro.sandbox.utils.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class GraphRepository {
 
-    private static final List<String> VERY_SMALL_DATASETS = List.of("0s", "1s", "2s", "3s", "4s");
-    private static final List<String> SMALL_DATASETS = List.of("0m", "1m", "2m", "3m", "4m", "5m");
-    private static final List<String> MID_DATASETS = List.of("6m", "7m", "8m", "9m");
-    private static final List<String> LARGE_DATASETS = List.of("0l", "1l", "2l");
-    private static final List<String> VERY_LARGE_DATASETS = List.of("3l", "4l", "5l");
-
-    private final List<TestInput> verySmallDatasets;
-    private final List<TestInput> smallDatasets;
-    private final List<TestInput> midDatasets;
-    private final List<TestInput> largeDatasets;
-    private final List<TestInput> veryLargeDatasets;
+    private final List<String> datasets;
+    private final int UNDIRECTED = 9;
+    private final int DIRECTED  = 1;
+    private final int WEIGHTED = 5;
 
     public GraphRepository() {
-        this.verySmallDatasets = new ArrayList<>();
-        this.smallDatasets = new ArrayList<>();
-        this.midDatasets = new ArrayList<>();
-        this.largeDatasets = new ArrayList<>();
-        this.veryLargeDatasets = new ArrayList<>();
+        datasets = new ArrayList<>();
 
-        VERY_SMALL_DATASETS.forEach(ds -> verySmallDatasets.add(getTestInput(ds, "verySmall")));
-        SMALL_DATASETS.forEach(ds -> smallDatasets.add(getTestInput(ds, "small")));
-        MID_DATASETS.forEach(ds -> midDatasets.add(getTestInput(ds, "mid")));
-        LARGE_DATASETS.forEach(ds -> largeDatasets.add(getTestInput(ds, "large")));
-        VERY_LARGE_DATASETS.forEach(ds -> veryLargeDatasets.add(getTestInput(ds, "veryLarge")));
-    }
-
-    public List<TestInput> getInputsFor(String datasetCategory) {
-        return switch (datasetCategory) {
-            case "verySmall" -> verySmallDatasets;
-            case "small" -> smallDatasets;
-            case "mid" -> midDatasets;
-            case "large" -> largeDatasets;
-            default -> veryLargeDatasets;
-        };
+        for (int i = 0; i < 10; i++) {
+            if (i < UNDIRECTED) datasets.add("undirected" + i);
+            if (i < DIRECTED) datasets.add("directed" + i);
+            if (i < WEIGHTED) datasets.add("weighted" + i);
+        }
     }
 
     public List<TestInput> getAllInputs() {
-        return Stream.of(verySmallDatasets, smallDatasets, midDatasets)
-                .flatMap(Collection::stream)
+        List<TestInput> inputs = new ArrayList<>();
+
+        for (String s : datasets) {
+            inputs.add(getTestInput(s));
+        }
+
+        return inputs;
+    }
+
+    public TestInput getInputFor(String dataset) {
+        return getTestInput(dataset);
+    }
+
+    public List<TestInput> getInputs(List<String> datasets) {
+        return datasets
+                .stream()
+                .map(this::getTestInput)
                 .collect(Collectors.toList());
     }
 
-    private static TestInput getTestInput(String dataset, String datasetCategory) {
+    public List<TestInput> getInputsFor(String datasetCategory) {
+       List<TestInput> inputs = new ArrayList<>();
+
+       datasets.forEach(dataset -> {
+           if (dataset.startsWith(datasetCategory)) inputs.add(getTestInput(dataset));
+       });
+
+       return inputs;
+    }
+
+    private TestInput getTestInput(String dataset) {
         String path = "/datasets/facebook/" + dataset + ".edges";
 
         return TestInput.builder()
                 .dataset(dataset)
-                .datasetCategory(datasetCategory)
-                .graph(GraphUtils.createUnweightedGraphFromPath(path))
+                .datasetCategory(StringUtils.extractCategory(dataset))
+                .graph(GraphUtils.loadUnweightedGraph(path))
                 .build();
     }
 }

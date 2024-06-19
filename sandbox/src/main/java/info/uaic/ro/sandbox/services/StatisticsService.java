@@ -1,5 +1,6 @@
 package info.uaic.ro.sandbox.services;
 
+import info.uaic.ro.sandbox.models.CodeRequest;
 import info.uaic.ro.sandbox.models.Result;
 import info.uaic.ro.sandbox.models.Statistics;
 import info.uaic.ro.sandbox.models.TestInput;
@@ -17,9 +18,9 @@ public class StatisticsService {
     private final RunnerService runnerService;
     private final GraphRepository graphRepository;
 
-    public Statistics createStatistics(String code, String datasetCategory) {
-        List<TestInput> inputs = graphRepository.getInputsFor(datasetCategory);
-        return createStatistics(code, inputs);
+    public Statistics createStatistics(CodeRequest codeRequest) {
+        List<TestInput> inputs = graphRepository.getInputs(codeRequest.getDatasets());
+        return createStatistics(codeRequest.getCode(), inputs);
     }
 
     public Statistics createStatistics(String code, List<TestInput> inputs) {

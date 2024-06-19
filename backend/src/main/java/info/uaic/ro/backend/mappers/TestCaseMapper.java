@@ -14,18 +14,7 @@ public interface TestCaseMapper {
             @Mapping(source = "algorithmType", target = "algorithmType"),
             @Mapping(source = "duration", target = "duration"),
             @Mapping(source = "memory", target = "memory"),
-            @Mapping(source = "dataset", target = "dataset"),
-            @Mapping(source = "datasetCategory", target = "datasetCategory"),
+            @Mapping(source = "dataset.fileName", target = "datasetFilename"),
     })
     TestCaseDto toDto(TestCase testCase);
-
-    @Mappings({
-            @Mapping(source = "id", target = "id"),
-            @Mapping(source = "algorithmType", target = "algorithmType"),
-            @Mapping(source = "duration", target = "duration"),
-            @Mapping(source = "memory", target = "memory"),
-            @Mapping(source = "dataset", target = "dataset"),
-            @Mapping(source = "datasetCategory", target = "datasetCategory"),
-    })
-    TestCase toEntity(TestCaseDto algorithmTypeDto);
 }

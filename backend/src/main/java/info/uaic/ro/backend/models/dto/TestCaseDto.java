@@ -9,7 +9,6 @@ public class TestCaseDto {
     private AlgorithmTypeDto algorithmType;
     private long duration;
     private long memory;
-    private String dataset;
-    private String datasetCategory;
+    private String datasetFilename;
 
 }

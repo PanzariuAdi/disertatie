@@ -1,5 +1,6 @@
 package info.uaic.ro.backend.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,17 +12,18 @@ public class TestCase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean directed;
-    private boolean weighted;
-
     @ManyToOne
     @JoinColumn(name = "algorithm_type_id", nullable = false)
+    @JsonBackReference
     private AlgorithmType algorithmType;
 
     private long duration;
     private long memory;
-    private String dataset;
-    private String datasetCategory;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "dataset_id", nullable = false)
+    @JsonBackReference
+    private Dataset dataset;
 
     @Lob
     private String expected;

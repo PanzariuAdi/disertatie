@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class StatisticsDto {
 
-    private List<RunEvaluationComparison<?>> runEvaluationComparisonResultList;
+    private List<CaseResultList<?>> caseResultList;
     private int totalCases;
 
 }

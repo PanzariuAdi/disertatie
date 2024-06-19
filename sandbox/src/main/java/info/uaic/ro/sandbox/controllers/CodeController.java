@@ -1,5 +1,6 @@
 package info.uaic.ro.sandbox.controllers;
 
+import info.uaic.ro.sandbox.models.CodeRequest;
 import info.uaic.ro.sandbox.models.Statistics;
 import info.uaic.ro.sandbox.services.StatisticsService;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,8 @@ public class CodeController {
     private final StatisticsService statisticsService;
 
     @PostMapping("/execute")
-    public ResponseEntity<Statistics> receiveCode(@RequestBody String code, @RequestParam String dataset) {
-        Statistics statistics = statisticsService.createStatistics(code, dataset);
+    public ResponseEntity<Statistics> receiveCode(@RequestBody CodeRequest code) {
+        Statistics statistics = statisticsService.createStatistics(code);
         return ResponseEntity.ok(statistics);
     }
 

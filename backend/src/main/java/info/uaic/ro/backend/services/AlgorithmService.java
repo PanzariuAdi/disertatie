@@ -10,8 +10,10 @@ import info.uaic.ro.backend.models.dto.AlgorithmTypeDto;
 import info.uaic.ro.backend.models.dto.ErrorDto;
 import info.uaic.ro.backend.models.dto.SandboxResultDto;
 import info.uaic.ro.backend.models.entities.AlgorithmType;
+import info.uaic.ro.backend.models.entities.Dataset;
 import info.uaic.ro.backend.models.entities.TestCase;
 import info.uaic.ro.backend.repositories.AlgorithmTypeRepository;
+import info.uaic.ro.backend.repositories.DatasetRepository;
 import info.uaic.ro.backend.repositories.TestCasesRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,8 +29,10 @@ public class AlgorithmService {
 
     private final AlgorithmMapper algorithmMapper;
     private final AlgorithmTypeRepository algorithmTypeRepository;
+    private final DatasetRepository datasetRepository;
     private final SandboxClient sandboxClient;
     private final TestCasesRepository testCasesRepository;
+    private final DatasetService datasetService;
     private final ObjectMapper objectMapper;
 
     public List<AlgorithmTypeDto> findAll() {
@@ -62,11 +66,20 @@ public class AlgorithmService {
             testCase.setDuration(sandboxCase.getDuration());
             testCase.setMemory(sandboxCase.getMemory());
             testCase.setAlgorithmType(algorithmType);
-            testCase.setDataset(sandboxCase.getDataset());
-            testCase.setDatasetCategory(sandboxCase.getDatasetCategory());
+            addDatasetToAlgorithm(algorithmType.getId(), sandboxCase.getDataset(), sandboxCase.getDatasetCategory());
             testCasesRepository.save(testCase);
         });
+    }
 
+    public void addDatasetToAlgorithm(Long algorithmTypeId, String fileName, String category) {
+        AlgorithmType algorithmType = algorithmTypeRepository.findById(algorithmTypeId)
+                .orElseThrow(() -> new RuntimeException("AlgorithmType not found"));
+
+        Dataset dataset = new Dataset();
+        dataset.setFileName(fileName);
+        dataset.setCategory(category);
+
+        datasetRepository.save(dataset);
     }
 
     @SneakyThrows

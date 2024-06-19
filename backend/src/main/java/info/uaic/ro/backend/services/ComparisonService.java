@@ -1,6 +1,6 @@
 package info.uaic.ro.backend.services;
 
-import info.uaic.ro.backend.models.dto.RunEvaluationComparison;
+import info.uaic.ro.backend.models.dto.CaseResultList;
 import info.uaic.ro.backend.models.dto.SandboxCaseDto;
 import info.uaic.ro.backend.models.dto.StatisticsDto;
 import lombok.AllArgsConstructor;
@@ -20,24 +20,24 @@ public class ComparisonService {
 
     public StatisticsDto getStatistics(String code, String algorithmType, String datasetCategory) {
         Map<String, SandboxCaseDto<?>> actualMap = sandboxService.getActualMap(code, datasetCategory);
-        Map<String, RunEvaluationComparison<?>> expectedMap = testCaseService.findAllBy(algorithmType, datasetCategory);
+        Map<String, CaseResultList<?>> expectedMap = testCaseService.findAllBy(algorithmType);
 
-        List<RunEvaluationComparison<?>> runEvaluationComparisonResultList = getCaseResultList(actualMap, expectedMap);
+        List<CaseResultList<?>> caseResultListResultList = getCaseResultList(actualMap, expectedMap);
 
         return StatisticsDto.builder()
-                .totalCases(runEvaluationComparisonResultList.size())
-                .runEvaluationComparisonResultList(runEvaluationComparisonResultList)
+                .totalCases(caseResultListResultList.size())
+                .caseResultList(caseResultListResultList)
                 .build();
     }
 
-    private List<RunEvaluationComparison<?>> getCaseResultList(Map<String, SandboxCaseDto<?>> actualMap, Map<String, RunEvaluationComparison<?>> expectedMap) {
+    private List<CaseResultList<?>> getCaseResultList(Map<String, SandboxCaseDto<?>> actualMap, Map<String, CaseResultList<?>> expectedMap) {
         return expectedMap.entrySet().stream()
                 .map(entry -> {
                     String dataset = entry.getKey();
-                    RunEvaluationComparison<?> expected = entry.getValue();
+                    CaseResultList<?> expected = entry.getValue();
                     SandboxCaseDto<?> actual = actualMap.get(dataset);
 
-                    return RunEvaluationComparison.builder()
+                    return CaseResultList.builder()
                             .expected(expected.getExpected())
                             .expectedDuration(expected.getDuration())
                             .expectedMemory(expected.getMemory())
@@ -48,7 +48,7 @@ public class ComparisonService {
                             .dataset(dataset)
                             .build();
                 })
-                .sorted(Comparator.comparing(RunEvaluationComparison::getDataset))
+                .sorted(Comparator.comparing(CaseResultList::getDataset))
                 .collect(Collectors.toUnmodifiableList());
     }
 

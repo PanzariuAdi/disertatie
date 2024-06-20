@@ -1,6 +1,7 @@
 package info.uaic.ro.backend.services;
 
 import info.uaic.ro.backend.models.dto.CaseResultList;
+import info.uaic.ro.backend.models.dto.CodeRequest;
 import info.uaic.ro.backend.models.dto.SandboxCaseDto;
 import info.uaic.ro.backend.models.dto.StatisticsDto;
 import lombok.AllArgsConstructor;
@@ -18,24 +19,25 @@ public class ComparisonService {
     private final SandboxService sandboxService;
     private final TestCaseService testCaseService;
 
-    public StatisticsDto getStatistics(String code, String algorithmType, String datasetCategory) {
-        Map<String, SandboxCaseDto<?>> actualMap = sandboxService.getActualMap(code, datasetCategory);
+    public StatisticsDto getStatistics(CodeRequest codeRequest, String algorithmType) {
+        Map<String, SandboxCaseDto<?>> actualMap = sandboxService.getActualMap(codeRequest);
         Map<String, CaseResultList<?>> expectedMap = testCaseService.findAllBy(algorithmType);
 
-        List<CaseResultList<?>> caseResultListResultList = getCaseResultList(actualMap, expectedMap);
+        List<CaseResultList<?>> caseResultList = getCaseResultList(actualMap, expectedMap);
 
         return StatisticsDto.builder()
-                .totalCases(caseResultListResultList.size())
-                .caseResultList(caseResultListResultList)
+                .totalCases(caseResultList.size())
+                .caseResultList(caseResultList)
                 .build();
     }
 
     private List<CaseResultList<?>> getCaseResultList(Map<String, SandboxCaseDto<?>> actualMap, Map<String, CaseResultList<?>> expectedMap) {
-        return expectedMap.entrySet().stream()
+        return actualMap.entrySet().stream()
                 .map(entry -> {
                     String dataset = entry.getKey();
-                    CaseResultList<?> expected = entry.getValue();
-                    SandboxCaseDto<?> actual = actualMap.get(dataset);
+
+                    CaseResultList<?> expected = expectedMap.get(dataset);
+                    SandboxCaseDto<?> actual = entry.getValue();
 
                     return CaseResultList.builder()
                             .expected(expected.getExpected())

@@ -1,7 +1,7 @@
 package info.uaic.ro.backend.services;
 
 import info.uaic.ro.backend.clients.SandboxClient;
-import info.uaic.ro.backend.models.dto.AlgorithmDto;
+import info.uaic.ro.backend.models.dto.CodeRequest;
 import info.uaic.ro.backend.models.dto.SandboxCaseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,11 @@ public class SandboxService {
 
     private final SandboxClient sandboxClient;
 
-    public Map<String, SandboxCaseDto<?>> getActualMap(String code, String datasetCategory) {
-        return sandboxClient.getResultFor(code, datasetCategory)
+    public Map<String, SandboxCaseDto<?>> getActualMap(CodeRequest codeRequest) {
+        return sandboxClient.getResultFor(codeRequest)
                 .getResults()
                 .stream()
                 .collect(Collectors.toMap(SandboxCaseDto::getDataset, sandboxCaseDto -> sandboxCaseDto));
     }
 
-    public void addAlgorithm(AlgorithmDto algorithmDto) {
-    }
 }

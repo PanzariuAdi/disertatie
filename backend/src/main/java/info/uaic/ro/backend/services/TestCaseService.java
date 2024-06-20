@@ -3,7 +3,10 @@ package info.uaic.ro.backend.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import info.uaic.ro.backend.mappers.TestCaseMapper;
 import info.uaic.ro.backend.models.dto.CaseResultList;
+import info.uaic.ro.backend.models.dto.TestCaseDto;
+import info.uaic.ro.backend.models.entities.AlgorithmType;
 import info.uaic.ro.backend.models.entities.TestCase;
 import info.uaic.ro.backend.repositories.AlgorithmTypeRepository;
 import info.uaic.ro.backend.repositories.TestCasesRepository;
@@ -11,8 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,8 +23,16 @@ import java.util.Map;
 public class TestCaseService {
 
     private final TestCasesRepository testCasesRepository;
+    private final TestCaseMapper mapper;
     private final AlgorithmTypeRepository algorithmTypeRepository;
     private final ObjectMapper objectMapper;
+
+    public List<TestCaseDto> findAll() {
+        return testCasesRepository.findAll()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+    }
 
     public Map<String, CaseResultList<?>> findAllBy(String algorithmType) {
         Map<String, CaseResultList<?>> map = new HashMap<>();

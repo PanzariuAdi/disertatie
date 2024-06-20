@@ -15,6 +15,7 @@ public interface TestCaseMapper {
             @Mapping(source = "duration", target = "duration"),
             @Mapping(source = "memory", target = "memory"),
             @Mapping(source = "dataset.fileName", target = "datasetFilename"),
+            @Mapping(source = "expected", target = "expected"),
     })
     TestCaseDto toDto(TestCase testCase);
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AlgorithmRequestDto {
+public class AlgorithmRequest {
 
     AlgorithmDto algorithm;
     List<String> datasets;

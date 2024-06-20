@@ -5,16 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import info.uaic.ro.backend.clients.SandboxClient;
 import info.uaic.ro.backend.exceptions.BackendException;
 import info.uaic.ro.backend.mappers.AlgorithmMapper;
-import info.uaic.ro.backend.models.dto.AlgorithmDto;
-import info.uaic.ro.backend.models.dto.AlgorithmTypeDto;
-import info.uaic.ro.backend.models.dto.ErrorDto;
-import info.uaic.ro.backend.models.dto.SandboxResultDto;
+import info.uaic.ro.backend.models.dto.*;
 import info.uaic.ro.backend.models.entities.AlgorithmType;
 import info.uaic.ro.backend.models.entities.Dataset;
 import info.uaic.ro.backend.models.entities.TestCase;
 import info.uaic.ro.backend.repositories.AlgorithmTypeRepository;
 import info.uaic.ro.backend.repositories.DatasetRepository;
 import info.uaic.ro.backend.repositories.TestCasesRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -48,10 +47,15 @@ public class AlgorithmService {
                 .orElseThrow(() -> new IllegalArgumentException("Algorithm type not found!"));
     }
 
-    public void addAlgorithm(AlgorithmDto algorithmDto) {
-        AlgorithmType algorithmType = saveAlgorithmType(algorithmDto);
+    @Transactional
+    public void addAlgorithm(AlgorithmRequest algorithmRequest) {
+        AlgorithmType algorithmType = saveAlgorithmType(algorithmRequest.getAlgorithm());
 
-        SandboxResultDto<?> result = sandboxClient.getResultFor(algorithmDto.getCode());
+        CodeRequest codeRequest = new CodeRequest();
+        codeRequest.setCode(algorithmRequest.getAlgorithm().getCode());
+        codeRequest.setDatasets(algorithmRequest.getDatasets());
+
+        SandboxResultDto<?> result = sandboxClient.getResultFor(codeRequest);
 
         result.getResults().forEach(sandboxCase -> {
 
@@ -66,18 +70,23 @@ public class AlgorithmService {
             testCase.setDuration(sandboxCase.getDuration());
             testCase.setMemory(sandboxCase.getMemory());
             testCase.setAlgorithmType(algorithmType);
+
             addDatasetToAlgorithm(algorithmType.getId(), sandboxCase.getDataset(), sandboxCase.getDatasetCategory());
+
+            Dataset dataset = fetchDataset(sandboxCase.getDataset(), algorithmType);
+            testCase.setDataset(dataset);
             testCasesRepository.save(testCase);
         });
     }
 
-    public void addDatasetToAlgorithm(Long algorithmTypeId, String fileName, String category) {
-        AlgorithmType algorithmType = algorithmTypeRepository.findById(algorithmTypeId)
+    public void addDatasetToAlgorithm(UUID algorithmUUID, String fileName, String category) {
+        AlgorithmType algorithmType = algorithmTypeRepository.findById(algorithmUUID)
                 .orElseThrow(() -> new RuntimeException("AlgorithmType not found"));
 
         Dataset dataset = new Dataset();
         dataset.setFileName(fileName);
         dataset.setCategory(category);
+        dataset.setAlgorithms(Collections.singletonList(algorithmType));
 
         datasetRepository.save(dataset);
     }
@@ -95,6 +104,11 @@ public class AlgorithmService {
         }
 
         return algorithmTypeRepository.save(algorithmType);
+    }
+
+    private Dataset fetchDataset(String fileName, AlgorithmType algorithmType) {
+        return datasetRepository.findByFileNameAndAlgorithms(fileName, algorithmType)
+                .orElseThrow(() -> new RuntimeException("Dataset not found: " + fileName));
     }
 
 }

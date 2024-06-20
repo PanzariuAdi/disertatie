@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -12,8 +13,8 @@ import java.util.Objects;
 public class Dataset {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     private boolean directed;
     private boolean weighted;

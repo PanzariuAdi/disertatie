@@ -1,6 +1,6 @@
 package info.uaic.ro.backend.controllers;
 
-import info.uaic.ro.backend.models.dto.AlgorithmDto;
+import info.uaic.ro.backend.models.dto.AlgorithmRequest;
 import info.uaic.ro.backend.models.dto.AlgorithmTypeDto;
 import info.uaic.ro.backend.services.AlgorithmService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class AlgorithmController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addAlgorithm(@RequestBody AlgorithmDto algorithmDto) {
-        algorithmService.addAlgorithm(algorithmDto);
+    public ResponseEntity<String> addAlgorithm(@RequestBody AlgorithmRequest request) {
+        algorithmService.addAlgorithm(request);
         return ResponseEntity.ok("OK");
     }
 }

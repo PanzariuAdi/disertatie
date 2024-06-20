@@ -5,6 +5,7 @@ import info.uaic.ro.backend.models.dto.TestCaseDto;
 import info.uaic.ro.backend.models.entities.TestCase;
 import info.uaic.ro.backend.repositories.AlgorithmTypeRepository;
 import info.uaic.ro.backend.repositories.TestCasesRepository;
+import info.uaic.ro.backend.services.TestCaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,26 +22,17 @@ public class TestCaseController {
     private final TestCasesRepository testCasesRepository;
     private final AlgorithmTypeRepository algorithmTypeRepository;
     private final TestCaseMapper mapper;
+    private final TestCaseService testCaseService;
 
     @GetMapping("/all")
     public ResponseEntity<List<TestCaseDto>> findAll() {
-        return ResponseEntity.ok(
-                testCasesRepository.findAll()
-                        .stream()
-                        .map(mapper::toDto)
-                        .toList()
-        );
+        return ResponseEntity.ok(testCaseService.findAll());
     }
 
-    @GetMapping
-    public ResponseEntity<List<TestCase>> findBy(@RequestParam String algorithm) {
-        List<TestCase> testCases = new ArrayList<>();
-        algorithmTypeRepository.findByName(algorithm)
-                .ifPresent(algorithmType -> {
-                    testCases.addAll(testCasesRepository.findAllByAlgorithmType(algorithmType));
-                });
+//    @GetMapping
+//    public ResponseEntity<List<TestCaseDto>> findBy(@RequestParam String algorithm) {
 
-        return ResponseEntity.ok(testCases);
-    }
+//        return ResponseEntity.ok(testCaseService.findAllBy(algorithm));
+//    }
 
 }

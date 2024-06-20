@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import info.uaic.ro.backend.exceptions.CodeErrorException;
 import info.uaic.ro.backend.models.dto.CodeErrorDto;
+import info.uaic.ro.backend.models.dto.CodeRequest;
 import info.uaic.ro.backend.models.dto.SandboxResultDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -25,40 +26,21 @@ public class SandboxClientImpl implements SandboxClient {
     private String sandboxUrl;
 
     private final RestTemplate restTemplate;
-    private static final String DATASET = "dataset";
     private static final String EXECUTE_ENDPOINT = "/execute";
-    private static final String ALGORITHM_ENDPOINT = "/algorithms";
 
     public SandboxClientImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public SandboxResultDto<?> getResultFor(String code, String dataset) {
+    public SandboxResultDto<?> getResultFor(CodeRequest codeRequest) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.TEXT_PLAIN);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> requestEntity = new HttpEntity<>(code, httpHeaders);
+        HttpEntity<CodeRequest> requestEntity = new HttpEntity<>(codeRequest, httpHeaders);
 
         String url = UriComponentsBuilder.fromHttpUrl(sandboxUrl + EXECUTE_ENDPOINT)
-                .queryParam(DATASET, dataset)
                 .toUriString();
-
-        try {
-            return restTemplate.postForObject(url, requestEntity, SandboxResultDto.class);
-        } catch (RestClientResponseException e) {
-            return handleErrorResponse(e);
-        }
-    }
-
-    @Override
-    public SandboxResultDto<?> getResultFor(String code) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.TEXT_PLAIN);
-
-        HttpEntity<String> requestEntity = new HttpEntity<>(code, httpHeaders);
-
-        String url = UriComponentsBuilder.fromHttpUrl(sandboxUrl + ALGORITHM_ENDPOINT).toUriString();
 
         try {
             return restTemplate.postForObject(url, requestEntity, SandboxResultDto.class);

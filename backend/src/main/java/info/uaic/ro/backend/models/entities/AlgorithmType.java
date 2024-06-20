@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -12,9 +13,10 @@ import java.util.Objects;
 public class AlgorithmType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
+    @Column(unique = true)
     private String name;
     private String signature;
 

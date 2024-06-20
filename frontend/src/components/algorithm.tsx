@@ -69,17 +69,20 @@ const Algorithm = () => {
             .filter(dataset => dataset.value)
             .map(dataset => dataset.name);
 
-        const newAlgorithm = {
-            name: algorithmName,
-            signature: signature,
-            code: code,
+        
+        const request = {
+            algorithm: {
+                name: algorithmName,
+                signature: signature,
+                code: code,
+                datasets: selectedDatasets,
+            },
             datasets: selectedDatasets,
         }
 
-
         try {
             await toast.promise(
-                axios.post(algorithmUrl, newAlgorithm, {
+                axios.post(algorithmUrl, request, {
                     headers: { 'Content-Type': 'application/json' }
                 }),
                 {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Algorithm from "./algorithm";
 import Login from "./login";
-import { log } from "console";
 
 interface Props {
     isLogged: boolean

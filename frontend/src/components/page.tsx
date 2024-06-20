@@ -9,11 +9,25 @@ import ErrorComponent from "./errors";
 interface Algorithm {
     id: number;
     name: string;
+    signature: string;
 }
 
 interface Errors {
     line: number;
     message: string;
+}
+
+interface Dataset {
+    id: number;
+    fileName: string;
+    category: string;
+    directed: boolean;
+    weighted: boolean;
+}
+
+interface CodeRequest {
+    datasets: string[];
+    code: string;
 }
 
 export function Page() {
@@ -26,11 +40,20 @@ export function Page() {
     const [errorMessage, setErrorMessage] = useState<Errors[]>([]);
     const [algorithmTypes, setAlgorithmTypes] = useState<Algorithm[]>([]);
     const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('');
-    const [selectedDataset, setSelectedDataset] = useState<string>('');
+    const [datasets, setDatasets] = useState<Dataset[]>([]);
+    const [checkedStates, setCheckedStates] = useState<{ [key: number]: boolean }>({});
+    const [filteredDatasets, setFilteredDatasets] = useState<Dataset[]>([]);
 
     useEffect(() => {
         loadAlgorithmTypes();
     }, []);
+
+    useEffect(() => {
+        if (datasets.length > 0) {
+          const filtered = datasets.filter(dataset => checkedStates[dataset.id]);
+          setFilteredDatasets(filtered);
+        }
+      }, [datasets, checkedStates]);
 
     const loadAlgorithmTypes = () => {
         const algorithmTypeUrl = backendUrl + "/algorithms/all";
@@ -47,10 +70,14 @@ export function Page() {
         if (selectedAlgorithm === '') return;
 
         const runCodeUrl = backendUrl + "/code/run";
+        const request: CodeRequest = {
+            datasets: filteredDatasets.map(dataset => dataset.fileName),
+            code: code
+        };
+
         setIsFetching(true);
-        axios.post(runCodeUrl, code, {
-            params: { algorithmType: selectedAlgorithm, dataset: selectedDataset },
-            headers: { 'Content-Type': 'text/plain' }
+        axios.post(runCodeUrl, request, {
+            params: { algorithmType: selectedAlgorithm },
         })
         .then(res => {
             setResponse(res.data);
@@ -65,16 +92,43 @@ export function Page() {
             }
             setIsFetching(false);
             setError(true);
+        })
+        .finally(() => {
+            setCheckedStates({});
         });
+    };
+
+    const handleCheckboxChange = (id: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCheckedStates({
+            ...checkedStates,
+            [id]: event.target.checked,
+        });
+
     };
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
         setSelectedAlgorithm(event.target.value);
+
+        const datasetsUrl = backendUrl + "/datasets";
+
+        axios.get(datasetsUrl, {
+            params: { algorithmName: event.target.value }
+        })
+        .then(res => {
+            setDatasets(res.data);
+            setCheckedStates({});
+        })
+        .catch(error => {
+            console.log(error);
+        });
     };
 
-    const handleSelectDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-        setSelectedDataset(event.target.value);
-    };
+    function getReturnType(algorithmName: string): string {
+        const type: string | undefined = algorithmTypes.find(algorithm => algorithm.name === algorithmName)?.signature;
+
+        if (type == undefined) return "void";
+        return type;
+    }
 
     return (
             <div className="h-screen w-screen overflow-hidden m-0 p-0">
@@ -83,6 +137,7 @@ export function Page() {
                         <Editor
                             value={code}
                             selectedAlgorithm={selectedAlgorithm}
+                            returnType={getReturnType(selectedAlgorithm)}
                             onChange={setCode} />
                     </div>
 
@@ -90,10 +145,11 @@ export function Page() {
                         <Controls
                             algorithmTypes={algorithmTypes}
                             selectedAlgorithm={selectedAlgorithm}
-                            selectedDataset={selectedDataset}
+                            datasets={datasets}
+                            checkedStates={checkedStates}
+                            onCheckboxChange={handleCheckboxChange}
                             handleRequest={handleRequest}
                             handleSelectChange={handleSelectChange}
-                            handleSelectDatasetChange={handleSelectDatasetChange}
                         />
 
                         <div className="rounded-lg flex-1 bg-dracula-background text-dracula-foreground flex overflow-y-auto">

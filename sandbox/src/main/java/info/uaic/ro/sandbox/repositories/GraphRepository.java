@@ -14,13 +14,13 @@ public class GraphRepository {
 
     private final List<String> datasets;
     private final int UNDIRECTED = 9;
-    private final int DIRECTED  = 1;
+    private final int DIRECTED  = 5;
     private final int WEIGHTED = 5;
 
     public GraphRepository() {
         datasets = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             if (i < UNDIRECTED) datasets.add("undirected" + i);
             if (i < DIRECTED) datasets.add("directed" + i);
             if (i < WEIGHTED) datasets.add("weighted" + i);
@@ -59,11 +59,21 @@ public class GraphRepository {
     }
 
     private TestInput getTestInput(String dataset) {
-        String path = "/datasets/facebook/" + dataset + ".edges";
+        String path = "/datasets/" + dataset + ".edges";
+
+        String category = StringUtils.extractCategory(dataset);
+
+        if (category.startsWith("weighted")) {
+            return TestInput.builder()
+                    .dataset(dataset)
+                    .datasetCategory(category)
+                    .graph(GraphUtils.loadWeightedGraph(path))
+                    .build();
+        }
 
         return TestInput.builder()
                 .dataset(dataset)
-                .datasetCategory(StringUtils.extractCategory(dataset))
+                .datasetCategory(category)
                 .graph(GraphUtils.loadUnweightedGraph(path))
                 .build();
     }

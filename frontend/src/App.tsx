@@ -3,6 +3,7 @@ import { Page } from './components/page';
 import Admin from './components/admin';
 import Navbar from './components/navbar';
 import Tests from './components/tests';
+import { Info } from './components/info';
 import {
   BrowserRouter as Router,
   Route,
@@ -16,6 +17,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Page />} />
+          <Route path="/info" element={<Info />} />
           <Route path="/admin" element={<Admin isLogged={false} />} />
           <Route path="/tests" element={<Tests />} />
         </Routes>

@@ -53,7 +53,7 @@ public class GraphUtils {
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = br.readLine()) != null) {
-                String[] splitLine = line.split(",");
+                String[] splitLine = line.split(" ");
 
                 int source = Integer.parseInt(splitLine[0]);
                 int destination = Integer.parseInt(splitLine[1]);

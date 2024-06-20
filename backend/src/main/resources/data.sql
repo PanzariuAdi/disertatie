@@ -19,15 +19,15 @@ INSERT INTO datasets(ID, FILE_NAME, DIRECTED, WEIGHTED, CATEGORY) VALUES
 INSERT INTO dataset_algorithm_type (dataset_id, algorithm_type_id)
 VALUES
    -- BETWEENNESS_CENTRALITY
-  ('70cbe3e8-d6fa-4f2d-9903-8967b1f40bdf', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('8b9e1b72-4a34-4631-ab99-ad1aeed16764', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('27005572-7230-4944-a04c-049e8544ea7a', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('7f62e93f-5f3d-489a-a7ca-22218506e46a', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('96a055cc-74d4-4468-87ad-35120eb8d054', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('bc85fd52-7e1b-4189-98af-f8929779aae5', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('240f3f33-9b1c-4dd9-b2a6-0b89dfab3c65', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('7d2d744d-fa0b-4199-b96c-519892f95e89', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
-  ('4b80d4ec-cb47-44a3-9bb6-8175d5dadf63', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
+  ('70cbe3e8-d6fa-4f2d-9903-8967b1f40bdf', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('8b9e1b72-4a34-4631-ab99-ad1aeed16764', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('27005572-7230-4944-a04c-049e8544ea7a', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('7f62e93f-5f3d-489a-a7ca-22218506e46a', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('96a055cc-74d4-4468-87ad-35120eb8d054', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('bc85fd52-7e1b-4189-98af-f8929779aae5', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('240f3f33-9b1c-4dd9-b2a6-0b89dfab3c65', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('7d2d744d-fa0b-4199-b96c-519892f95e89', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
+  ('4b80d4ec-cb47-44a3-9bb6-8175d5dadf63', 'de999b85-c476-47e2-8950-45a4174b0dc7'),
   -- KATZ CENTRALITY
   ('70cbe3e8-d6fa-4f2d-9903-8967b1f40bdf', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),
   ('8b9e1b72-4a34-4631-ab99-ad1aeed16764', '3eebbcc9-e33f-46fa-b0de-a5c4d52840d6'),

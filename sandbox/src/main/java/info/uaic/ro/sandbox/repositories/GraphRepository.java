@@ -3,11 +3,11 @@ package info.uaic.ro.sandbox.repositories;
 import info.uaic.ro.sandbox.models.TestInput;
 import info.uaic.ro.sandbox.utils.GraphUtils;
 import info.uaic.ro.sandbox.utils.StringUtils;
+import org.graph4j.Graph;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class GraphRepository {
@@ -19,7 +19,6 @@ public class GraphRepository {
 
     public GraphRepository() {
         datasets = new ArrayList<>();
-
         for (int i = 1; i < 10; i++) {
             if (i < UNDIRECTED) datasets.add("undirected" + i);
             if (i < DIRECTED) datasets.add("directed" + i);
@@ -27,54 +26,22 @@ public class GraphRepository {
         }
     }
 
-    public List<TestInput> getAllInputs() {
-        List<TestInput> inputs = new ArrayList<>();
-
-        for (String s : datasets) {
-            inputs.add(getTestInput(s));
-        }
-
-        return inputs;
-    }
-
     public TestInput getInputFor(String dataset) {
-        return getTestInput(dataset);
-    }
-
-    public List<TestInput> getInputs(List<String> datasets) {
-        return datasets
-                .stream()
-                .map(this::getTestInput)
-                .collect(Collectors.toList());
-    }
-
-    public List<TestInput> getInputsFor(String datasetCategory) {
-       List<TestInput> inputs = new ArrayList<>();
-
-       datasets.forEach(dataset -> {
-           if (dataset.startsWith(datasetCategory)) inputs.add(getTestInput(dataset));
-       });
-
-       return inputs;
-    }
-
-    private TestInput getTestInput(String dataset) {
+        Graph<Object, Integer> graph;
         String path = "/datasets/" + dataset + ".edges";
-
         String category = StringUtils.extractCategory(dataset);
 
         if (category.startsWith("weighted")) {
-            return TestInput.builder()
-                    .dataset(dataset)
-                    .datasetCategory(category)
-                    .graph(GraphUtils.loadWeightedGraph(path))
-                    .build();
+            graph = GraphUtils.loadWeightedGraph(path);
+
+        } else {
+            graph = GraphUtils.loadUnweightedGraph(path);
         }
 
         return TestInput.builder()
                 .dataset(dataset)
                 .datasetCategory(category)
-                .graph(GraphUtils.loadUnweightedGraph(path))
+                .graph(graph)
                 .build();
     }
 }

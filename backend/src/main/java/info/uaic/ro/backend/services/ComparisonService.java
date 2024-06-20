@@ -46,12 +46,22 @@ public class ComparisonService {
                             .actual(actual.getActual())
                             .duration(actual.getDuration())
                             .memory(actual.getMemory())
-                            .correct(expected.getExpected().equals(actual.getActual()))
+                            .correct(areEqual(expected.getExpected(), actual.getActual()))
                             .dataset(dataset)
                             .build();
                 })
                 .sorted(Comparator.comparing(CaseResultList::getDataset))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private boolean areEqual(Object a, Object b) {
+        if (a == null && b == null) {
+            return true;
+        }
+        if (a == null || b == null || a.getClass() != b.getClass()) {
+            return false;
+        }
+        return a.equals(b);
     }
 
 }

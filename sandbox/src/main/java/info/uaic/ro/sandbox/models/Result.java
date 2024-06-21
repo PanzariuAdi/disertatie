@@ -1,15 +1,16 @@
 package info.uaic.ro.sandbox.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 public class Result implements Serializable {
-    Object actual;
-    int caseNumber;
-    long duration;
-    long memory;
+
+    private Object actual;
+    private long duration;
+    private long memory;
+    private String dataset;
+    private String datasetCategory;
+
 }

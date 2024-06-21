@@ -7,7 +7,9 @@ import org.graph4j.Graph;
 @Data
 @Builder
 public class TestInput {
-    private String id;
-    private boolean isRun;
+
+    private String dataset;
+    private String datasetCategory;
     private Graph<?, ?> graph;
+
 }

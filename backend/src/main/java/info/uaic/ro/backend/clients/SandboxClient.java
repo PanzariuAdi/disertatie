@@ -1,9 +1,10 @@
 package info.uaic.ro.backend.clients;
 
-import info.uaic.ro.backend.models.dto.SandboxResult;
+import info.uaic.ro.backend.models.dto.CodeRequest;
+import info.uaic.ro.backend.models.dto.SandboxResultDto;
 
 public interface SandboxClient {
 
-    SandboxResult<?> getResultFor(String code, String datasetCategory);
+    SandboxResultDto<?> getResultFor(CodeRequest codeRequest);
 
 }

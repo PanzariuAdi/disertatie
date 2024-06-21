@@ -1,13 +1,28 @@
 import './App.css';
 import { Page } from './components/page';
+import Admin from './components/admin';
+import Navbar from './components/navbar';
+import Tests from './components/tests';
+import { Info } from './components/info';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes 
+} from 'react-router-dom';
 
 function App() {
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 overflow-hidden bg-black">
-      <div className="h-screen w-screen m-0 p-1">
-        <Page />
+    <Router>
+      <div className="w-screen h-screen overflow-hidden">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Page />} />
+          <Route path="/info" element={<Info />} />
+          <Route path="/admin" element={<Admin isLogged={false} />} />
+          <Route path="/tests" element={<Tests />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
 

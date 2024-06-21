@@ -6,6 +6,7 @@ import { dracula } from "thememirror";
 interface EditorProps {
     value: string
     selectedAlgorithm: string;
+    returnType: string 
     onChange: (value: string) => void;
 }
 
@@ -23,7 +24,7 @@ public class Solution {
 }
 
 
-const Editor: React.FC<EditorProps> = ({value, selectedAlgorithm, onChange }) => {
+const Editor: React.FC<EditorProps> = ({value, selectedAlgorithm, returnType, onChange }) => {
     const algorithmReturnTypesMap: Map<string, string> = new Map([
         ["betweenness_centrality", "Map<Integer, Double>"],
         ["katz_centrality", "Map<Integer, Double>"],
@@ -31,7 +32,6 @@ const Editor: React.FC<EditorProps> = ({value, selectedAlgorithm, onChange }) =>
     ]);
 
     useEffect(() => {
-        const returnType = algorithmReturnTypesMap.get(selectedAlgorithm) || 'void';
         onChange(getBaseCode(returnType));
     }, [selectedAlgorithm])
 

@@ -51,7 +51,4 @@ public class PageRank {
        return ranks;
     }
 
-    public static void main(String[] args) {
-
-    }
 }

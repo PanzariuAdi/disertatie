@@ -19,7 +19,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BackendException.class)
-    public ResponseEntity<List<ErrorDto>> invalidCode(BackendException e) {
+    public ResponseEntity<List<ErrorDto>> backendException(BackendException e) {
         return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
     }
 }

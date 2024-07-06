@@ -25,18 +25,12 @@ public class Solution {
 
 
 const Editor: React.FC<EditorProps> = ({value, selectedAlgorithm, returnType, onChange }) => {
-    const algorithmReturnTypesMap: Map<string, string> = new Map([
-        ["betweenness_centrality", "Map<Integer, Double>"],
-        ["katz_centrality", "Map<Integer, Double>"],
-        ["another_type", "int"],
-    ]);
-
     useEffect(() => {
         onChange(getBaseCode(returnType));
     }, [selectedAlgorithm])
 
     return (
-        <div style={{ height: '100vh'}}>
+        <div style={{ height: '95vh'}}>
             <CodeMirror 
                 value={value}
                 theme={dracula}

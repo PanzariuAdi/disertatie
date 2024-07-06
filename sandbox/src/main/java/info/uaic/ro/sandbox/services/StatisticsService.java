@@ -1,5 +1,7 @@
 package info.uaic.ro.sandbox.services;
 
+import info.uaic.ro.sandbox.exceptions.InvalidCodeException;
+import info.uaic.ro.sandbox.exceptions.TimeExceededException;
 import info.uaic.ro.sandbox.models.CodeRequest;
 import info.uaic.ro.sandbox.models.Result;
 import info.uaic.ro.sandbox.models.Statistics;
@@ -7,8 +9,13 @@ import info.uaic.ro.sandbox.models.TestInput;
 import info.uaic.ro.sandbox.repositories.GraphRepository;
 import info.uaic.ro.sandbox.utils.MeasureUtils;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.*;
+
+@Slf4j
 @Service
 @AllArgsConstructor
 public class StatisticsService {
@@ -27,11 +34,32 @@ public class StatisticsService {
         return statistics;
     }
 
+    @SneakyThrows
     public Result getResult(String code, TestInput input) {
-        long start = System.currentTimeMillis();
-        Object actual = runnerService.runCode(code, input.getGraph());
-        long duration = System.currentTimeMillis() - start;
+        final long TIMEOUT = 10; // Timeout duration in seconds
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
+        Callable<Object> task = () -> runnerService.runCode(code, input.getGraph());
+        Future<Object> future = executor.submit(task);
+
+        long start = System.currentTimeMillis();
+        Object actual = null;
+
+        try {
+            actual = future.get(TIMEOUT, TimeUnit.SECONDS); // Attempt to get the result within the timeout
+        } catch (TimeoutException e) {
+            future.cancel(true); // Cancel the task if it times out
+            throw new TimeExceededException();
+        } catch (ExecutionException e ) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        } finally {
+            executor.shutdown();
+        }
+
+        long duration = System.currentTimeMillis() - start;
         long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 
         Result result = new Result();

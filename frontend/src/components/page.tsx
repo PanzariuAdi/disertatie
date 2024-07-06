@@ -133,7 +133,7 @@ export function Page() {
     return (
             <div className="h-screen w-screen overflow-hidden m-0 p-0">
                 <div className="bg-[#21222c] flex h-screen w-screen flex justify-between ">
-                    <div className="w-1/2 p-1 overflow-auto shadow-lg rounded-lg m-1">
+                    <div className="w-1/2 p-1 overflow-hidden shadow-lg rounded-lg m-1">
                         <Editor
                             value={code}
                             selectedAlgorithm={selectedAlgorithm}

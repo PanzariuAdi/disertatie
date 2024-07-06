@@ -29,6 +29,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    @ExceptionHandler(TimeExceededException.class)
+    public ResponseEntity<List<CodeError>> timeExceeded(TimeExceededException e) {
+        List<CodeError> errors = Collections.singletonList(CodeError.of(0, "Time Exceeded!"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
     @ExceptionHandler(ClassNotFoundException.class)
     public ResponseEntity<List<CodeError>> invalidClassName(ClassNotFoundException e) {
         List<CodeError> errors = Collections.singletonList(CodeError.of(0, "Class name MUST be Solution!"));

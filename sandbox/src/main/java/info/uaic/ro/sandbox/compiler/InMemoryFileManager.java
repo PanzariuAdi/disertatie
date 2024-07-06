@@ -28,7 +28,8 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     }
 
     @Override
-    public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind, FileObject sibling) {
+    public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind,
+                                               FileObject sibling) {
         log.info("Location {}", location);
         JavaClassAsBytes classAsBytes = new JavaClassAsBytes(className, kind);
         compiledClasses.put(className, classAsBytes);

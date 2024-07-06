@@ -16,6 +16,7 @@ const Admin: React.FC<Props> = () => {
     const handleLogin = (logged: boolean) => {
         setIsLogged(logged);
         localStorage.setItem('isLogged', JSON.stringify(logged));
+        window.location.reload();
     }
 
     return (

@@ -138,7 +138,7 @@ const Algorithm = () => {
         <div className="h-screen w-screen overflow-hidden bg-[#21222c] p-4 overflow-y-auto">
             <ToastContainer />
             <div className="min-h-screen flex items-center justify-center ">
-                <div className="w-2/5 bg-dracula-background p-8 rounded-lg shadow-md">
+                <div className="w-2/5 bg-dracula-background p-8 rounded-lg shadow-md mb-4">
                     <h2 className="text-2xl font-bold mb-6 text-center text-white">Add new algorithm</h2>
                     <form>
                         <div className="mb-4">

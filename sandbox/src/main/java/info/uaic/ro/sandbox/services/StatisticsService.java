@@ -13,6 +13,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.*;
 
 @Slf4j
@@ -36,7 +38,7 @@ public class StatisticsService {
 
     @SneakyThrows
     public Result getResult(String code, TestInput input) {
-        final long TIMEOUT = 10; // Timeout duration in seconds
+        final long TIMEOUT = 15; // Timeout duration in minutes
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
         Callable<Object> task = () -> runnerService.runCode(code, input.getGraph());
@@ -46,7 +48,7 @@ public class StatisticsService {
         Object actual = null;
 
         try {
-            actual = future.get(TIMEOUT, TimeUnit.SECONDS); // Attempt to get the result within the timeout
+            actual = future.get(TIMEOUT, TimeUnit.MINUTES); // Attempt to get the result within the timeout
         } catch (TimeoutException e) {
             future.cancel(true); // Cancel the task if it times out
             throw new TimeExceededException();
@@ -59,6 +61,7 @@ public class StatisticsService {
             executor.shutdown();
         }
 
+
         long duration = System.currentTimeMillis() - start;
         long memoryUsed = MeasureUtils.bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 
@@ -69,7 +72,26 @@ public class StatisticsService {
         result.setDataset(input.getDataset());
         result.setDatasetCategory(input.getDatasetCategory());
 
+        System.out.println("--------");
+        System.out.println(input.getDataset());
+        print(actual);
+        System.out.println("DURATION: " + duration);
+        System.out.println("MEMORY: " + memoryUsed);
+        System.out.println("--------");
+
         return result;
+    }
+
+    private void print(Object obj) {
+        Map<Integer, Double> map = (Map<Integer, Double>) obj;
+
+        System.out.print("{");
+        for (Map.Entry<Integer, Double> entry : map.entrySet()) {
+            System.out.print("\"" + entry.getKey() + "\":" + entry.getValue() + ",");
+        }
+        System.out.println("}");
+
+
     }
 
 }

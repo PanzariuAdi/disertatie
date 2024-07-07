@@ -57,7 +57,7 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="metric">
                             <h3 className="text-lg font-semibold">Actual average duration:</h3>
-                            <p>{averageDuration.toFixed(2)}s</p>
+                            <p>{averageDuration.toFixed(2)}ms</p>
                         </div>
 
                         <div className="metric">
@@ -67,12 +67,12 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
 
                         <div className="metric">
                             <h3 className="text-lg font-semibold">Expected average duration:  </h3>
-                            <p>{averageExpectedDuration.toFixed(2)}s</p>
+                            <p>{averageExpectedDuration.toFixed(2)}ms</p>
                         </div>
 
                         <div className="metric">
                             <h3 className="text-lg font-semibold">Expected average memory:</h3>
-                            <p>{averageExpectedMemory.toFixed(2)}s</p>
+                            <p>{averageExpectedMemory.toFixed(2)}MB</p>
                         </div>
                     </div>
                 </div>

@@ -41,8 +41,8 @@ public class ComparisonService {
 
                     return CaseResultList.builder()
                             .expected(expected.getExpected())
-                            .expectedDuration(expected.getDuration())
-                            .expectedMemory(expected.getMemory())
+                            .expectedDuration(expected.getExpectedDuration())
+                            .expectedMemory(expected.getExpectedMemory())
                             .actual(actual.getActual())
                             .duration(actual.getDuration())
                             .memory(actual.getMemory())

@@ -164,15 +164,6 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
                                                 {
                                                     openActualIndex === index && (
                                                         renderExpected(result.actual)
-                                                        // <ul className="list-disc list-inside">
-                                                        //     {
-                                                        //         Object.entries(result.actual).map(([key, value]) => (
-                                                        //             <li key={key} className="ml-4">
-                                                        //                 {key}: {value}
-                                                        //             </li>
-                                                        //         ))
-                                                        //     }
-                                                        // </ul>
                                                     )
                                                 }
                                             </div>
@@ -187,11 +178,6 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
                                                         <ul className="list-disc list-inside">
                                                             {
                                                                 renderExpected(result.expected)
-                                                                // Object.entries(result.expected).map(([key, value]) => (
-                                                                //     <li key={key} className="ml-4">
-                                                                //         {key}: {value}
-                                                                //     </li>
-                                                                // ))
                                                             }
                                                         </ul>
                                                     )

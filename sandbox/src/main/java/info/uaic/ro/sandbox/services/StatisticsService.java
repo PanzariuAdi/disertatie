@@ -72,26 +72,7 @@ public class StatisticsService {
         result.setDataset(input.getDataset());
         result.setDatasetCategory(input.getDatasetCategory());
 
-        System.out.println("--------");
-        System.out.println(input.getDataset());
-        print(actual);
-        System.out.println("DURATION: " + duration);
-        System.out.println("MEMORY: " + memoryUsed);
-        System.out.println("--------");
-
         return result;
-    }
-
-    private void print(Object obj) {
-        Map<Integer, Double> map = (Map<Integer, Double>) obj;
-
-        System.out.print("{");
-        for (Map.Entry<Integer, Double> entry : map.entrySet()) {
-            System.out.print("\"" + entry.getKey() + "\":" + entry.getValue() + ",");
-        }
-        System.out.println("}");
-
-
     }
 
 }

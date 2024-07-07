@@ -11,7 +11,7 @@ public class PageRank {
     public static double TOLERANCE = 0.0001;
     public static int MAX_ITERATIONS = 100;
 
-    public static Map<Integer, Double> pageRank(Graph<?, ?> graph) {
+    public Map<Integer, Double> calculate(Graph<?, ?> graph) {
        Map<Integer, Double> ranks = new HashMap<>();
        int totalNodes = graph.numVertices();
 

@@ -14,11 +14,14 @@ interface Result {
     correct: boolean;
     duration: number;
     memory: number;
-    actual: { [key: string]: number };
+    // actual: { [key: string]: number };
+    actual: ExpectedType;
     expected: { [key: string]: number };
     expectedDuration: number;
     expectedMemory: number;
 }
+
+type ExpectedType = Map<string, any> | number | string | any[] | Record<string, any>;
 
 const ResultComponent: React.FC<Props> = ({ data }) => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -47,6 +50,48 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
     const averageMemory = totalMemory / count;
     const averageExpectedDuration = totalExpectedDuration / count;
     const averageExpectedMemory = totalExpectedMemory / count;
+
+    const renderExpected = (expected: ExpectedType) => {
+        if (expected instanceof Map) {
+          return (
+            <ul>
+              {Array.from(expected.entries()).map(([key, value]) => (
+                <li key={key} className="ml-4">
+                  {key}: {value}
+                </li>
+              ))}
+            </ul>
+          );
+        } else if (typeof expected === 'number') {
+          return <p>{expected}</p>;
+        } else if (typeof expected === 'string') {
+          return <p>{expected}</p>;
+        } else if (Array.isArray(expected)) {
+          return (
+            <ul>
+              {expected.map((item, index) => (
+                <li key={index} className="ml-4">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          );
+        } else if (typeof expected === 'object' && expected !== null) {
+          return (
+            <ul>
+              {Object.entries(expected).map(([key, value]) => (
+                <li key={key} className="ml-4">
+                  {key}: {value}
+                </li>
+              ))}
+            </ul>
+          );
+        } else if (expected === null) {
+          return <p>null</p>; 
+        } else {
+          return <p>Unsupported data type</p>; 
+        }
+      };    
 
     return (
         <div className="w-full p-4">
@@ -118,15 +163,16 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
                                                 <h3 className="text-lg font-semibold mt-4"> Actual Values <span>{openActualIndex === index ? '-' : '+'}</span> </h3>
                                                 {
                                                     openActualIndex === index && (
-                                                        <ul className="list-disc list-inside">
-                                                            {
-                                                                Object.entries(result.actual).map(([key, value]) => (
-                                                                    <li key={key} className="ml-4">
-                                                                        {key}: {value}
-                                                                    </li>
-                                                                ))
-                                                            }
-                                                        </ul>
+                                                        renderExpected(result.actual)
+                                                        // <ul className="list-disc list-inside">
+                                                        //     {
+                                                        //         Object.entries(result.actual).map(([key, value]) => (
+                                                        //             <li key={key} className="ml-4">
+                                                        //                 {key}: {value}
+                                                        //             </li>
+                                                        //         ))
+                                                        //     }
+                                                        // </ul>
                                                     )
                                                 }
                                             </div>
@@ -140,11 +186,12 @@ const ResultComponent: React.FC<Props> = ({ data }) => {
 
                                                         <ul className="list-disc list-inside">
                                                             {
-                                                                Object.entries(result.expected).map(([key, value]) => (
-                                                                    <li key={key} className="ml-4">
-                                                                        {key}: {value}
-                                                                    </li>
-                                                                ))
+                                                                renderExpected(result.expected)
+                                                                // Object.entries(result.expected).map(([key, value]) => (
+                                                                //     <li key={key} className="ml-4">
+                                                                //         {key}: {value}
+                                                                //     </li>
+                                                                // ))
                                                             }
                                                         </ul>
                                                     )

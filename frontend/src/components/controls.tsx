@@ -59,7 +59,7 @@ const Controls: React.FC<ControlsProps> = ({ algorithmTypes, selectedAlgorithm, 
 
                 <div className="container mx-auto p-2">
                     {Object.keys(categorizedDatasets).map((category) => (
-                        <div key={category} className="category border border-dracula-purple rounded-lg p-4">
+                        <div key={category} className="category border border-dracula-purple rounded-lg p-4 mb-4">
                             <h2 className="mb-4 text-xl font-extrabold dark:text-white text-center">{category}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {categorizedDatasets[category].map((dataset) => (

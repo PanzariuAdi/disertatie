@@ -152,7 +152,7 @@ export function Page() {
                             handleSelectChange={handleSelectChange}
                         />
 
-                        <div className="rounded-lg flex-1 bg-dracula-background text-dracula-foreground flex overflow-y-auto">
+                        <div className="rounded-lg flex-1 bg-dracula-background text-dracula-foreground flex overflow-y-auto box-border pb-5 mb-20">
                             {error ? <ErrorComponent errors={errorMessage} /> : fetching ? <Loader /> : response && <ResultComponent data={response} />}
                         </div>
                     </div>

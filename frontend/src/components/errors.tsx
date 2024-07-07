@@ -13,6 +13,7 @@ const ErrorComponent: React.FC<Props> = ({ errors }) => {
     return (
         <div className="w-full p-4">
             {
+                errors === null ? null :
                 errors.map((error, index) => (
                     <div key={index} className="border border-dracula-pink rounded-lg p-4 mb-4 overflow-auto">
                         <div className="">
